@@ -1,1 +1,2 @@
 "CovTn proj" 
+"full" 
