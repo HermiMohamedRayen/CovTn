@@ -1,0 +1,30 @@
+<form class="main" (submit)="submit()" [formGroup]="form">
+    <div>
+        <label for="firstName">first name</label>
+        <input type="text" name="firstName" id="firstName" class="inp" formControlName="firstName" required>
+    </div>
+    <div>
+        <label for="lastName">last name</label>
+        <input type="text" name="lastName" id="lastName" class="inp" formControlName="lastName" required>
+    </div>
+    <div>
+        <label for="email">email</label>
+        <input type="email" name="email" id="email" class="inp" formControlName="email" required>
+    </div>
+    <div>
+        <label for="password">password</label>
+        <input type="password" name="password" id="password" class="inp" formControlName="password" required>
+    </div>
+    <div>
+        <label for="retypePassword">retype password</label>
+        <input type="password" name="retypePassword" id="retypePassword" class="inp" formControlName="confirmPassword" required>
+    </div>
+    @if (form.get('confirmPassword')?.errors?.['passwordMismatch']) {
+        <div class="error-message">
+            Passwords do not match
+        </div>
+    }
+    <div>
+        <button type="submit" [disabled]="form.invalid">Sign Up</button>
+    </div>
+</form>

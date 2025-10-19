@@ -1,0 +1,73 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    width: 100%;
+}
+.main > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    width: 100%;
+}
+.inp{
+    border-style: solid;
+    max-width: 260px;
+    padding: 4px;
+    border-radius: 20px;
+    border-color: gray;
+    outline: none;
+    width: 100%;
+    
+}
+.inp:focus{
+    border-color: black;
+}
+label{
+    text-transform: capitalize;
+}
+button{
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgb(38, 196, 40);
+    color: white;
+    cursor: pointer;
+    margin:  auto;
+    margin-top: 10px;
+    
+}
+button:disabled{
+    background-color: white;
+    color: gray;
+    border: 1px solid gray;
+    cursor: not-allowed;
+}
+.ng-invalid.ng-touched {
+    border-color: red !important;
+}
+.ng-valid.ng-touched{
+    border-color: green !important;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 13px;
+    margin-top: 4px;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+}
+
+@media (max-width: 450px) {
+    .main > div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .inp{
+        max-width: unset;
+        margin-top: 4px;
+    }
+    
+}
