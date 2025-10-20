@@ -1,4 +1,4 @@
-package models;
+package com.iset.covtn.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

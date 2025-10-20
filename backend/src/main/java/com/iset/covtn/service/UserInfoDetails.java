@@ -1,4 +1,4 @@
-package service;
+package com.iset.covtn.service;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import models.UserInfo;
+import com.iset.covtn.models.UserInfo;
 
 public class UserInfoDetails implements UserDetails {
     private String username; // Changed from 'name' to 'email' for clarity
@@ -18,7 +18,7 @@ public class UserInfoDetails implements UserDetails {
     public UserInfoDetails(UserInfo userInfo) {
         this.username = userInfo.getEmail(); // Use email as username
         this.password = userInfo.getPassword();
-        this.authorities = List.of(userInfo.getRoles().split(","))
+        this.authorities = List.of(userInfo.getRoles())
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

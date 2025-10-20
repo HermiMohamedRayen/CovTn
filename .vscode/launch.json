@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CovtnApplication<covtn>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.iset.covtn.CovtnApplication",
+            "projectName": "covtn",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

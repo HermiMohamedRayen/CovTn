@@ -1,57 +1,57 @@
-package service;
+package com.iset.covtn.service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import models.UserInfo;
-import repository.UserInfoRepository;
+import com.iset.covtn.models.UserInfo;
+import com.iset.covtn.repository.UserInfoRepository;
+
 
 @Service
 public class UserInfoService implements UserDetailsService {
 
-    private final UserInfoRepository repository;
-    private final PasswordEncoder encoder;
+    @Autowired
+    private UserInfoRepository repository;
+
+    private final ObjectProvider<PasswordEncoder> passwordEncoderProvider;
 
     @Autowired
-    public UserInfoService(UserInfoRepository repository, PasswordEncoder encoder) {
-        this.repository = repository;
-        this.encoder = encoder;
+    public UserInfoService(ObjectProvider<PasswordEncoder> passwordEncoderProvider) {
+        this.passwordEncoderProvider = passwordEncoderProvider;
     }
-
-    /**
-     * Méthode utilisée par Spring Security pour charger un utilisateur via son email (username).
-     */
+    // Method to load user details by username (email)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Fetch user from the database by email (username)
         Optional<UserInfo> userInfo = repository.findByEmail(username);
+        
         if (userInfo.isEmpty()) {
-            throw new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + username);
+            throw new UsernameNotFoundException("User not found with email: " + username);
         }
-        return new UserInfoDetails(userInfo.get());
+        
+        return userInfo.map(UserInfoDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-    /**
-     * Enregistrer un nouvel utilisateur (avec mot de passe encodé)
-     */
+    // Add any additional methods for registering or managing users
     public String addUser(UserInfo userInfo) {
-        if (repository.findByEmail(userInfo.getEmail()).isPresent()) {
-            return "Cet email est déjà utilisé !";
-        }
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+        // Encrypt password before saving
+        PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+        userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
+        userInfo.addRole("ROLE_PASSENGER");
         repository.save(userInfo);
-        return "Utilisateur ajouté avec succès ✅";
+        return "User added successfully!";
     }
-
     /**
      * Rechercher un utilisateur par email
      */
@@ -61,9 +61,10 @@ public class UserInfoService implements UserDetailsService {
     }
     public String updateUser(Integer id, UserInfo updatedUserInfo) {
         Optional<UserInfo> existingUser = repository.findById(id);
+                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+
         if (existingUser.isPresent()) {
             UserInfo user = existingUser.get();
-            user.setName(updatedUserInfo.getName());
             user.setEmail(updatedUserInfo.getEmail());
             if (updatedUserInfo.getPassword() != null && !updatedUserInfo.getPassword().isEmpty()) {
                 user.setPassword(encoder.encode(updatedUserInfo.getPassword()));
@@ -96,7 +97,9 @@ public class UserInfoService implements UserDetailsService {
     // ---------------------------------------------------------
 
     public String addDriver(UserInfo driverInfo) {
-        driverInfo.setRoles("ROLE_DRIVER");
+                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+
+        driverInfo.addRole("ROLE_DRIVER");
         driverInfo.setPassword(encoder.encode(driverInfo.getPassword()));
         repository.save(driverInfo);
         return "Conducteur ajouté avec succès ✅";
@@ -109,15 +112,16 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public String updateDriver(Integer id, UserInfo driverInfo) {
+                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+
         Optional<UserInfo> existingDriver = repository.findById(id);
         if (existingDriver.isPresent()) {
             UserInfo driver = existingDriver.get();
-            driver.setName(driverInfo.getName());
             driver.setEmail(driverInfo.getEmail());
             if (driverInfo.getPassword() != null && !driverInfo.getPassword().isEmpty()) {
                 driver.setPassword(encoder.encode(driverInfo.getPassword()));
             }
-            driver.setRoles("ROLE_DRIVER");
+            driver.addRole("ROLE_DRIVER");
             repository.save(driver);
             return "Conducteur mis à jour avec succès ✅";
         }
@@ -137,7 +141,9 @@ public class UserInfoService implements UserDetailsService {
     // ---------------------------------------------------------
 
     public String addPassenger(UserInfo passengerInfo) {
-        passengerInfo.setRoles("ROLE_PASSENGER");
+                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+
+        passengerInfo.addRole("ROLE_PASSENGER");
         passengerInfo.setPassword(encoder.encode(passengerInfo.getPassword()));
         repository.save(passengerInfo);
         return "Passager ajouté avec succès ✅";
@@ -150,20 +156,24 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public String updatePassenger(Integer id, UserInfo passengerInfo) {
+                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+
         Optional<UserInfo> existingPassenger = repository.findById(id);
         if (existingPassenger.isPresent()) {
             UserInfo passenger = existingPassenger.get();
-            passenger.setName(passengerInfo.getName());
             passenger.setEmail(passengerInfo.getEmail());
             if (passengerInfo.getPassword() != null && !passengerInfo.getPassword().isEmpty()) {
                 passenger.setPassword(encoder.encode(passengerInfo.getPassword()));
             }
-            passenger.setRoles("ROLE_PASSENGER");
+            passenger.addRole("ROLE_PASSENGER");
             repository.save(passenger);
             return "Passager mis à jour avec succès ✅";
+
         }
         return "Passager introuvable ❌";
     }
+
+
 
     public String deletePassenger(Integer id) {
         if (repository.existsById(id)) {

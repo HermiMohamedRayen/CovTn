@@ -1,5 +1,7 @@
-package controller;
+package com.iset.covtn.controller;
 
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,20 +12,31 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import models.AuthRequest;
-import models.UserInfo;
-import service.JwtService;
-import service.UserInfoService;
+import com.iset.covtn.models.AuthRequest;
+import com.iset.covtn.models.UserInfo;
+import com.iset.covtn.repository.UserInfoRepository;
+import com.iset.covtn.service.JwtService;
+import com.iset.covtn.service.UserInfoService;
 
-import java.util.List;
-import java.util.Optional;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
+
+    private final UserInfoRepository userInfoRepository;
 
     @Autowired
     private UserInfoService userService;
@@ -33,6 +46,13 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    UserController(UserInfoRepository userInfoRepository) {
+        this.userInfoRepository = userInfoRepository;
+    }
 
     /**
      * Page d'accueil publique
@@ -84,9 +104,11 @@ public class UserController {
     /**
      * Récupérer les infos de l'utilisateur connecté
      */
+    @PreAuthorize("hasAuthority('ROLE_PASSENGER')")
     @GetMapping("/me")
-    public ResponseEntity<UserInfo> getCurrentUser(Authentication authentication) {
-        UserInfo user = userService.findByEmail(authentication.getName());
+    public ResponseEntity<UserInfo> getCurrentUser() {
+        String token = request.getHeader("Authorization").substring(7);
+        UserInfo user = userService.findByEmail(jwtService.extractUsername(token));
         return ResponseEntity.ok(user);
     }
 
@@ -98,6 +120,7 @@ public class UserController {
     public ResponseEntity<List<UserInfo>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
 
     /**
      * Supprimer un utilisateur (admin uniquement)
