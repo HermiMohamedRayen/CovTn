@@ -1,4 +1,4 @@
-package exceptions;
+package com.iset.covtn.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Input } from '@angular/core';
 
 @Component({
   selector: 'app-main-component',
@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './main-component.css'
 })
 export class MainComponent {
-
+  @Input() userData: any;
 }

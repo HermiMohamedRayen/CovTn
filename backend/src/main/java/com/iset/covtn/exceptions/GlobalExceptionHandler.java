@@ -1,4 +1,4 @@
-package exceptions;
+package com.iset.covtn.exceptions;
 
 import java.util.HashMap;
 import java.util.Map;

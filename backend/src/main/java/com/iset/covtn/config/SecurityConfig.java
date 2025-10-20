@@ -1,8 +1,8 @@
-package config;
+package com.iset.covtn.config;
 
 
-import filter.JwtAuthFiltrer;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.iset.covtn.filter.JwtAuthFiltrer;
+
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity

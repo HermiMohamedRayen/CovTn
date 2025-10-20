@@ -1,4 +1,4 @@
-package models;
+package com.iset.covtn.models;
 
 public enum Role {
     ADMIN,
