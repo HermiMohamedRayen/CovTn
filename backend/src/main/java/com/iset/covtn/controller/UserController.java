@@ -125,16 +125,32 @@ public class UserController {
     /**
      * Supprimer un utilisateur (admin uniquement)
      */
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/users/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
         try {
-            String result = userService.deleteUser(id);
+            String result = userService.deleteUser(email);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Utilisateur introuvable avec l'id : " + id);
+                    .body("Utilisateur introuvable avec l'email : " + email);
         }
+    }
+    @PutMapping("/Updateusers/{email}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UserInfo userInfo) {
+        return ResponseEntity.ok(userService.updateUser(email, userInfo));
+    }
+    @GetMapping("/users/{email}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<UserInfo> getUserByEmail(@PathVariable String email) {
+        UserInfo user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+@PostMapping("/addUser")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> addUser(@RequestBody UserInfo userInfo) {
+        return ResponseEntity.ok(userService.addUser(userInfo));
     }
 
     /**
@@ -154,14 +170,14 @@ public class UserController {
 
     @PutMapping("/drivers/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updateDriver(@PathVariable Integer id, @RequestBody UserInfo driverInfo) {
-        return ResponseEntity.ok(userService.updateDriver(id, driverInfo));
+    public ResponseEntity<String> updateDriver(@PathVariable String email, @RequestBody UserInfo driverInfo) {
+        return ResponseEntity.ok(userService.updateDriver(email, driverInfo));
     }
 
-    @DeleteMapping("/drivers/{id}")
+    @DeleteMapping("/drivers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteDriver(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.deleteDriver(id));
+    public ResponseEntity<String> deleteDriver(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deleteDriver(email));
     }
 
     /**
@@ -179,15 +195,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllPassengers());
     }
 
-    @PutMapping("/passengers/{id}")
+    @PutMapping("/passengers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updatePassenger(@PathVariable Integer id, @RequestBody UserInfo passengerInfo) {
-        return ResponseEntity.ok(userService.updatePassenger(id, passengerInfo));
+    public ResponseEntity<String> updatePassenger(@PathVariable String email, @RequestBody UserInfo passengerInfo) {
+        return ResponseEntity.ok(userService.updatePassenger(email, passengerInfo));
     }
 
-    @DeleteMapping("/passengers/{id}")
+    @DeleteMapping("/passengers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deletePassenger(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.deletePassenger(id));
+    public ResponseEntity<String> deletePassenger(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deletePassenger(email));
     }
 }

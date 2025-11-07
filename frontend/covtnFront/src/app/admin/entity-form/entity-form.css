@@ -1,0 +1,118 @@
+/* Conteneur principal */
+.form-container {
+  max-width: 450px;
+  margin: 50px auto;
+  padding: 30px 40px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: transform 0.3s ease-in-out;
+}
+
+.form-container:hover {
+  transform: translateY(-3px);
+}
+
+h2 {
+  text-align: center;
+  color: #2d2d2d;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+/* Champs du formulaire */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.4);
+}
+
+/* Message d’erreur */
+.error-message {
+  color: #d9534f;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* Petit texte d’aide */
+small {
+  color: #666;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Boutons */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+}
+
+button {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-button {
+  background-color: #3b82f6;
+  color: white;
+  margin-right: 10px;
+}
+
+.submit-button:hover {
+  background-color: #2563eb;
+}
+
+.cancel-button {
+  background-color: #e5e7eb;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .form-container {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}

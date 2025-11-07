@@ -59,7 +59,7 @@ public class UserInfoService implements UserDetailsService {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable : " + email));
     }
-    public String updateUser(Integer id, UserInfo updatedUserInfo) {
+    public String updateUser(String id, UserInfo updatedUserInfo) {
         Optional<UserInfo> existingUser = repository.findById(id);
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
@@ -75,9 +75,9 @@ public class UserInfoService implements UserDetailsService {
         return "User Not Found";
     }
 
-    public String deleteUser(Integer id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deleteUser(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "User Deleted Successfully";
         }
         return "User Not Found";
@@ -111,7 +111,7 @@ public class UserInfoService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public String updateDriver(Integer id, UserInfo driverInfo) {
+    public String updateDriver(String id, UserInfo driverInfo) {
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
         Optional<UserInfo> existingDriver = repository.findById(id);
@@ -128,9 +128,9 @@ public class UserInfoService implements UserDetailsService {
         return "Conducteur introuvable ❌";
     }
 
-    public String deleteDriver(Integer id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deleteDriver(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "Conducteur supprimé avec succès ✅";
         }
         return "Conducteur introuvable ❌";
@@ -155,10 +155,10 @@ public class UserInfoService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public String updatePassenger(Integer id, UserInfo passengerInfo) {
+    public String updatePassenger(String email, UserInfo passengerInfo) {
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
-        Optional<UserInfo> existingPassenger = repository.findById(id);
+        Optional<UserInfo> existingPassenger = repository.findById(email);
         if (existingPassenger.isPresent()) {
             UserInfo passenger = existingPassenger.get();
             passenger.setEmail(passengerInfo.getEmail());
@@ -175,9 +175,9 @@ public class UserInfoService implements UserDetailsService {
 
 
 
-    public String deletePassenger(Integer id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deletePassenger(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "Passager supprimé avec succès ✅";
         }
         return "Passager introuvable ❌";
