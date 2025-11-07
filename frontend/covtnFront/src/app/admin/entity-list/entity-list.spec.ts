@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { EntityList } from './entity-list';
+
+describe('EntityList', () => {
+  let component: EntityList;
+  let fixture: ComponentFixture<EntityList>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [EntityList]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(EntityList);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

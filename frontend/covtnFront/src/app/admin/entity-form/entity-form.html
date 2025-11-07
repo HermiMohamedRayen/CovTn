@@ -1,0 +1,52 @@
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Modifier' : 'Créer' }} un Utilisateur</h2>
+
+  <form [formGroup]="entityForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="email">Email :</label>
+      <input id="email" type="email" formControlName="email" required [readonly]="isEditMode" />
+      <div *ngIf="entityForm.get('email')?.invalid && entityForm.get('email')?.touched" class="error-message">
+        L'email est requis et doit être valide.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="firstName">Prénom :</label>
+      <input id="firstName" type="text" formControlName="firstName" required />
+      <div *ngIf="entityForm.get('firstName')?.invalid && entityForm.get('firstName')?.touched" class="error-message">
+        Le prénom est requis.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Nom :</label>
+      <input id="lastName" type="text" formControlName="lastName" required />
+      <div *ngIf="entityForm.get('lastName')?.invalid && entityForm.get('lastName')?.touched" class="error-message">
+        Le nom est requis.
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!isEditMode">
+      <label for="password">Mot de passe :</label>
+      <input id="password" type="password" formControlName="password" required />
+      <div *ngIf="entityForm.get('password')?.invalid && entityForm.get('password')?.touched" class="error-message">
+        Le mot de passe est requis.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="roles">Rôles :</label>
+      <input id="roles" type="text" formControlName="roles" placeholder="Ex: ADMIN, USER" />
+      <small>Entrez les rôles séparés par des virgules.</small>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" [disabled]="entityForm.invalid" class="submit-button">
+        {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+      </button>
+      <button type="button" class="cancel-button" [routerLink]="['/admin/users']">
+        Annuler
+      </button>
+    </div>
+  </form>
+</div>
