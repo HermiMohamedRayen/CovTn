@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.UserInfo;
 import com.iset.covtn.repository.UserInfoRepository;
 
@@ -44,7 +45,12 @@ public class UserInfoService implements UserDetailsService {
     }
 
     // Add any additional methods for registering or managing users
-    public String addUser(UserInfo userInfo) {
+    public String addUser(UserInfo userInfo) throws UserDejaExistException {
+        // Check if user already exists
+        if (repository.findByEmail(userInfo.getEmail()).isPresent()) {
+            throw new UserDejaExistException("User already exists with email: " + userInfo.getEmail());
+        }
+
         // Encrypt password before saving
         PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
         userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
@@ -59,7 +65,7 @@ public class UserInfoService implements UserDetailsService {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable : " + email));
     }
-    public String updateUser(Integer id, UserInfo updatedUserInfo) {
+    public String updateUser(String id, UserInfo updatedUserInfo) {
         Optional<UserInfo> existingUser = repository.findById(id);
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
@@ -75,7 +81,7 @@ public class UserInfoService implements UserDetailsService {
         return "User Not Found";
     }
 
-    public String deleteUser(Integer id) {
+    public String deleteUser(String id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return "User Deleted Successfully";
@@ -111,7 +117,7 @@ public class UserInfoService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public String updateDriver(Integer id, UserInfo driverInfo) {
+    public String updateDriver(String id, UserInfo driverInfo) {
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
         Optional<UserInfo> existingDriver = repository.findById(id);
@@ -128,7 +134,7 @@ public class UserInfoService implements UserDetailsService {
         return "Conducteur introuvable ❌";
     }
 
-    public String deleteDriver(Integer id) {
+    public String deleteDriver(String id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return "Conducteur supprimé avec succès ✅";
@@ -155,7 +161,7 @@ public class UserInfoService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public String updatePassenger(Integer id, UserInfo passengerInfo) {
+    public String updatePassenger(String id, UserInfo passengerInfo) {
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
         Optional<UserInfo> existingPassenger = repository.findById(id);
@@ -175,7 +181,7 @@ public class UserInfoService implements UserDetailsService {
 
 
 
-    public String deletePassenger(Integer id) {
+    public String deletePassenger(String id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return "Passager supprimé avec succès ✅";

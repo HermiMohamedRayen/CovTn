@@ -9,6 +9,7 @@ import { Login } from './login/login';
 import { Sign } from './sign/sign';
 import { MainComponent } from './main-component/main-component';
 import { NavBar } from './nav-bar/nav-bar';
+import { AuthentificationComponent } from './authentification-component/authentification-component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { NavBar } from './nav-bar/nav-bar';
     Sign,
     MainComponent,
     NavBar,
+    AuthentificationComponent,
     
   ],
   imports: [

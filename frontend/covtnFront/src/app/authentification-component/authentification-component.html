@@ -1,0 +1,22 @@
+@if (!auth) {
+<main>
+  @if(!signUp) {
+  <app-sign *ngIf="sw" (signUp)="signUpUser($event)"></app-sign>
+  <app-login *ngIf="!sw" (login)="loginUser($event)"></app-login>
+  <div>
+
+    Do you want to&nbsp;<span (click)="perm()">{{swName}}</span>?
+  </div>
+
+  }
+  @else{
+  <div class="vrffield">
+    <label for="vrfmail">please enter the code we sent to your email</label>
+    <input type="text" name="vrfmail" id="vrfmail">
+    <button (click)="verifMail()">verify</button>
+  </div>
+
+
+  }
+</main>
+}

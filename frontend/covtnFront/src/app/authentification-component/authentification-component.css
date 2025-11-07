@@ -1,0 +1,76 @@
+main{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-57%,-50%);
+    border: 1px solid black;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px;
+    width: 70%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.859);
+
+}
+span{
+    color: blue;
+    cursor: pointer;
+
+}
+div{
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Verification field styles */
+.vrffield {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.vrffield label {
+    text-transform: none;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.vrffield input {
+    border-style: solid;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border-color: gray;
+    outline: none;
+    width: 150px;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.vrffield input:focus {
+    border-color: black;
+}
+
+.vrffield button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgb(38, 196, 40);
+    color: white;
+    cursor: pointer;
+    margin: auto;
+    margin-top: 6px;
+}
+
+.vrffield button:hover {
+    background-color: rgb(32, 168, 34);
+}
+
+.vrffield button:active {
+    transform: scale(0.98);
+}
