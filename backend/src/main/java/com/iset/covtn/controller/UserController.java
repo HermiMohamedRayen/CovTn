@@ -1,7 +1,10 @@
 package com.iset.covtn.controller;
 
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iset.covtn.exceptions.UserDejaExistException;
+import com.iset.covtn.models.AuthObj;
 import com.iset.covtn.models.AuthRequest;
 import com.iset.covtn.models.UserInfo;
 import com.iset.covtn.repository.UserInfoRepository;
@@ -33,7 +37,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UserInfoRepository userInfoRepository;
@@ -54,6 +57,8 @@ public class UserController {
         this.userInfoRepository = userInfoRepository;
     }
 
+    private HashMap<String, AuthObj> emailsCodes = new HashMap<>();
+
     /**
      * Page d'accueil publique
      */
@@ -70,11 +75,26 @@ public class UserController {
         try {
             String result = userService.addUser(userInfo);
             return ResponseEntity.ok(result);
+        } catch (UserDejaExistException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body( e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de la création de l'utilisateur : " + e.getMessage());
         }
     }
+
+    @PostMapping("/validateMail")
+    public ResponseEntity<?> validateMail(@RequestBody AuthObj authObj) {
+
+        if(emailsCodes.get(authObj.getEmail()) != null && emailsCodes.get(authObj.getEmail()).equals(authObj)){
+            String token = emailsCodes.get(authObj.getEmail()).getToken();
+            emailsCodes.remove(authObj.getEmail());
+            return ResponseEntity.ok(token);
+        }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Code invalide.");
+    }
+    
 
     /**
      * Authentification + génération de token JWT
@@ -88,9 +108,15 @@ public class UserController {
                             authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String token = jwtService.generateToken(userDetails);
-                return ResponseEntity.ok(token);
+                AuthObj authObj = new AuthObj(authRequest.getUsername(), String.valueOf(new Date().getTime()), "","");
+                int randomNumber = new Random().nextInt(9000) + 1000;
+                String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
+                AuthObj authObjstore = new AuthObj(authRequest.getUsername(), authObj.getId(), String.valueOf(randomNumber),token);
+                emailsCodes.put(authRequest.getUsername(), authObjstore);
+                System.out.println("Code for " + authRequest.getUsername() + ": " + randomNumber + " .. "+ authObjstore.getId());
+                //TODO: send email with code
+
+                return ResponseEntity.ok(authObj);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Échec d'authentification.");
         } catch (BadCredentialsException e) {
@@ -127,7 +153,7 @@ public class UserController {
      */
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
             String result = userService.deleteUser(id);
             return ResponseEntity.ok(result);
@@ -154,13 +180,13 @@ public class UserController {
 
     @PutMapping("/drivers/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updateDriver(@PathVariable Integer id, @RequestBody UserInfo driverInfo) {
+    public ResponseEntity<String> updateDriver(@PathVariable String id, @RequestBody UserInfo driverInfo) {
         return ResponseEntity.ok(userService.updateDriver(id, driverInfo));
     }
 
     @DeleteMapping("/drivers/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteDriver(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteDriver(@PathVariable String id) {
         return ResponseEntity.ok(userService.deleteDriver(id));
     }
 
@@ -181,13 +207,13 @@ public class UserController {
 
     @PutMapping("/passengers/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updatePassenger(@PathVariable Integer id, @RequestBody UserInfo passengerInfo) {
+    public ResponseEntity<String> updatePassenger(@PathVariable String id, @RequestBody UserInfo passengerInfo) {
         return ResponseEntity.ok(userService.updatePassenger(id, passengerInfo));
     }
 
     @DeleteMapping("/passengers/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deletePassenger(@PathVariable Integer id) {
+    public ResponseEntity<String> deletePassenger(@PathVariable String id) {
         return ResponseEntity.ok(userService.deletePassenger(id));
     }
 }

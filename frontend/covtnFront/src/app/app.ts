@@ -1,5 +1,6 @@
-import { Component, signal,OnInit } from '@angular/core';
+import { Component, signal,OnInit, ViewChild } from '@angular/core';
 import { ApiService } from './api-service';
+import { GuardsCheckEnd, GuardsCheckStart, NavigationCancel, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,72 +9,26 @@ import { ApiService } from './api-service';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('covtnFront');
-  protected auth = false;
-  protected sw = false;
-  protected swName = "sign in";
-  protected signUp = false;
-  protected userData: any;
+  protected loading = true;
 
-  constructor(private apiService: ApiService) {
-    if(localStorage.getItem('token')!==null){
-      const token = localStorage.getItem('token')?.toString() || '';
-      this.apiService.validateToken(token).subscribe({
-        next: (response) => {
-          this.auth = true;
-          this.userData = response;
-        },
-        error: (error) => {
-          this.auth = false;
-          localStorage.removeItem('token');
-          console.error('Token validation error:', error);
-        }
-      });
-    }
-  }
-
- 
-
-  perm(){
-    this.sw = !this.sw
-    switch(this.sw){
-      case false: this.swName = "sign in"; break;
-      case true: this.swName = "log in"; break;
-    }
-  }
-
-
-  verifMail(){
-    this.auth = true;
-  }
-
-  loginUser($event: { email: string; password: string }){
-    const user = {username: $event.email, password: $event.password};
-    this.apiService.login(user).subscribe({
-      next: (response) => {
-        const token = response;
-        localStorage.setItem('token', token.toString());
-        this.auth = true;
-      }
-      ,
-      error: (error) => {
-        alert('Login failed. Please check your credentials.');
-        console.error('Login error:', error);
-      }
+  constructor(private apiService: ApiService,private router: Router) {
+    this.apiService.isAuthenticated().then((authenticated => {
+      this.router.navigate(['/']);
+    }));
+    this.router.events.subscribe(event => {
+      if (event instanceof GuardsCheckStart) {
+        this.loading = true;
+        console.log("GuardStart")
+      }     
+      if (event instanceof GuardsCheckEnd || event instanceof NavigationCancel) {
+        this.loading = false;
+        console.log("GuardEnd")
+      } 
     });
 
-     
   }
-  signUpUser($event: { firstName: string; lastName: string; email: string; password: string }){
-    this.apiService.signUp($event).subscribe({
-      next: (response) => {
-        alert('Registration successful! You can now log in.');
-        this.perm();
-      },
-      error: (error) => {
-        alert('Registration failed. Please try again.');
-        console.error('Registration error:', error);
-      }
-    });
-  }
+
+    
+  
+
 }

@@ -1,77 +1,27 @@
-main{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-57%,-50%);
-    border: 1px solid black;
-    padding: 16px;
-    border-radius: 8px;
-    margin: 16px;
-    width: 70%;
-    max-width: 400px;
-    background-color: rgba(255, 255, 255, 0.859);
 
-}
-span{
-    color: blue;
-    cursor: pointer;
 
-}
-div{
-    margin-top: 15px;
+.loading-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
     display: flex;
-    justify-content: center;
-}
-
-/* Verification field styles */
-.vrffield {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    width: 100%;
+    z-index: 9999;
+}
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
 }
 
-.vrffield label {
-    text-transform: none;
-    font-size: 14px;
-    color: #333;
-    text-align: center;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-
-.vrffield input {
-    border-style: solid;
-    padding: 8px 12px;
-    border-radius: 20px;
-    border-color: gray;
-    outline: none;
-    width: 150px;
-    text-align: center;
-    font-size: 16px;
-    letter-spacing: 2px;
-}
-
-.vrffield input:focus {
-    border-color: black;
-}
-
-.vrffield button {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: none;
-    background-color: rgb(38, 196, 40);
-    color: white;
-    cursor: pointer;
-    margin: auto;
-    margin-top: 6px;
-}
-
-.vrffield button:hover {
-    background-color: rgb(32, 168, 34);
-}
-
-.vrffield button:active {
-    transform: scale(0.98);
-}
-
