@@ -27,9 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.AuthObj;
 import com.iset.covtn.models.AuthRequest;
+import com.iset.covtn.models.EmailDetails;
 import com.iset.covtn.models.UserInfo;
 import com.iset.covtn.repository.UserInfoRepository;
+import com.iset.covtn.service.EmailServiceImpl;
 import com.iset.covtn.service.JwtService;
+import com.iset.covtn.service.UserInfoDetails;
 import com.iset.covtn.service.UserInfoService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,6 +56,9 @@ public class UserController {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private EmailServiceImpl emailService;
+
     UserController(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
     }
@@ -67,14 +73,37 @@ public class UserController {
         return "🚗 Bienvenue sur CovTn - Plateforme de covoiturage sécurisée avec JWT";
     }
 
+    private AuthObj mailVerifier(String email,String token){
+        AuthObj authObj = new AuthObj(email, String.valueOf(new Date().getTime()), "","");
+                int randomNumber = new Random().nextInt(9000) + 1000;
+                AuthObj authObjstore = new AuthObj(email, authObj.getId(), String.valueOf(randomNumber),token);
+                emailsCodes.put(email, authObjstore);
+                System.out.println("Code for " + email + ": " + randomNumber );
+                emailService.sendSimpleMail(
+                    new EmailDetails(
+                        email,
+                        "Votre code de vérification est : " + randomNumber,
+                        "Code de vérification CovTn",
+                        ""
+                    )
+                );
+        return authObj;
+
+    }
+
     /**
      * Ajouter un nouvel utilisateur (passager, conducteur ou admin)
      */
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserInfo userInfo) {
+    public ResponseEntity<?> registerUser(@RequestBody UserInfo userInfo) {
         try {
-            String result = userService.addUser(userInfo);
+            userService.addUser(userInfo);
+            
+            String token = jwtService.generateToken(new UserInfoDetails(userInfo));
+            AuthObj result = mailVerifier(userInfo.getEmail(), token);
             return ResponseEntity.ok(result);
+            
+
         } catch (UserDejaExistException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body( e.getMessage());
@@ -108,14 +137,9 @@ public class UserController {
                             authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                AuthObj authObj = new AuthObj(authRequest.getUsername(), String.valueOf(new Date().getTime()), "","");
-                int randomNumber = new Random().nextInt(9000) + 1000;
-                String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
-                AuthObj authObjstore = new AuthObj(authRequest.getUsername(), authObj.getId(), String.valueOf(randomNumber),token);
-                emailsCodes.put(authRequest.getUsername(), authObjstore);
-                System.out.println("Code for " + authRequest.getUsername() + ": " + randomNumber + " .. "+ authObjstore.getId());
-                //TODO: send email with code
-
+                AuthObj authObj = mailVerifier(authRequest.getUsername(),
+                    jwtService.generateToken((UserDetails) authentication.getPrincipal()));
+                
                 return ResponseEntity.ok(authObj);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Échec d'authentification.");
@@ -151,15 +175,39 @@ public class UserController {
     /**
      * Supprimer un utilisateur (admin uniquement)
      */
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/users/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
         try {
-            String result = userService.deleteUser(id);
+            String result = userService.deleteUser(email);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Utilisateur introuvable avec l'id : " + id);
+                    .body("Utilisateur introuvable avec l'email : " + email);
+        }
+    }
+    @PutMapping("/Updateusers/{email}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UserInfo userInfo) {
+        return ResponseEntity.ok(userService.updateUser(email, userInfo));
+    }
+    @GetMapping("/users/{email}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<UserInfo> getUserByEmail(@PathVariable String email) {
+        UserInfo user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+    @PostMapping("/addUser")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> addUser(@RequestBody UserInfo userInfo) {
+        try{
+            return ResponseEntity.ok(userService.addUser(userInfo));
+        } catch (UserDejaExistException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body( e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
         }
     }
 
@@ -184,10 +232,10 @@ public class UserController {
         return ResponseEntity.ok(userService.updateDriver(id, driverInfo));
     }
 
-    @DeleteMapping("/drivers/{id}")
+    @DeleteMapping("/drivers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteDriver(@PathVariable String id) {
-        return ResponseEntity.ok(userService.deleteDriver(id));
+    public ResponseEntity<String> deleteDriver(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deleteDriver(email));
     }
 
     /**
@@ -205,15 +253,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllPassengers());
     }
 
-    @PutMapping("/passengers/{id}")
+    @PutMapping("/passengers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updatePassenger(@PathVariable String id, @RequestBody UserInfo passengerInfo) {
-        return ResponseEntity.ok(userService.updatePassenger(id, passengerInfo));
+    public ResponseEntity<String> updatePassenger(@PathVariable String email, @RequestBody UserInfo passengerInfo) {
+        return ResponseEntity.ok(userService.updatePassenger(email, passengerInfo));
     }
 
-    @DeleteMapping("/passengers/{id}")
+    @DeleteMapping("/passengers/{email}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deletePassenger(@PathVariable String id) {
-        return ResponseEntity.ok(userService.deletePassenger(id));
+    public ResponseEntity<String> deletePassenger(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deletePassenger(email));
     }
 }

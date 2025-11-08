@@ -14,7 +14,6 @@ export class NavBar {
   logout() {
     // Clear any stored authentication tokens
     localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
     
     // Navigate to login page
     window.location.reload()

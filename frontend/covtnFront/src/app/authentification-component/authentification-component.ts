@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ApiService } from '../api-service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-authentification-component',
@@ -38,18 +38,17 @@ export class AuthentificationComponent {
     this.auth = true;
   }
 
+  
   loginUser($event: { email: string; password: string }){
     const user = {username: $event.email, password: $event.password};
     this.apiService.login(user).subscribe({
-      next: (response) => {
-        const token = response;
-        localStorage.setItem('token', token.toString());
-        this.router.navigate(['/']);
-      }
-      ,
+      next: (elem: String) => {
+        const val = JSON.parse(elem.toString());
+        const toVerify : NavigationExtras = {state: { elem: val } };
+        this.router.navigate(['/mail-verify'], toVerify);
+      },
       error: (error) => {
-        alert('Login failed. Please check your credentials.');
-        console.error('Login error:', error);
+        alert("Login failed: " + error.error);
       }
     });
 

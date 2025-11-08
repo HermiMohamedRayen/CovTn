@@ -1,0 +1,23 @@
+<div class="list-container">
+  <h2>Liste des Entités</h2>
+  <button class="add-button" [routerLink]="['/admin/entities/new']">Ajouter une nouvelle Entité</button>
+
+  <table class="entity-table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of displayedColumns">{{ col | titlecase }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entity of entities">
+        <td>{{ entity.email }}</td>
+        <td>{{ entity.firstName }}</td>
+        <td>{{ entity.description }}</td>
+        <td>
+          <button class="edit-button" (click)="editEntity(entity.id)">Modifier</button>
+          <button class="delete-button" (click)="deleteEntity(entity.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,15 @@
+<aside class="sidebar">
+  <div class="logo">
+    <h2>Admin Panel</h2>
+  </div>
+  <nav>
+    <ul>
+      @for (item of navLinks; track $index) {
+      <li >
+        <a [routerLink]="item.path" routerLinkActive="active-link">{{ item.label }}</a>
+      
+      </li>
+      }
+    </ul>
+  </nav>
+</aside>
