@@ -36,6 +36,8 @@ import com.iset.covtn.service.UserInfoDetails;
 import com.iset.covtn.service.UserInfoService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -264,4 +266,10 @@ public class UserController {
     public ResponseEntity<String> deletePassenger(@PathVariable String email) {
         return ResponseEntity.ok(userService.deletePassenger(email));
     }
+    @GetMapping("/makeAdmin")
+    public String makeAdmin(@RequestParam String email) {
+         userService.makeAdmin(email);
+        return "Utilisateur promu en tant qu'administrateur : " + email;
+    }
+    
 }

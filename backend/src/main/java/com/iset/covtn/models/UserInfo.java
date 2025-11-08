@@ -18,7 +18,7 @@ public class UserInfo {
     private String firstName;
     private String lastName;
     private String password;
-    private HashSet<String> roles;
+    private HashSet<String> roles; // ROLE_PASSENGER , ROLE_ADMIN, ROLE_DRIVER
 
      public void addRole(String role) {
         if (this.roles == null) {
