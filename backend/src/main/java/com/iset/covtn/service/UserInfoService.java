@@ -81,9 +81,9 @@ public class UserInfoService implements UserDetailsService {
         return "User Not Found";
     }
 
-    public String deleteUser(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deleteUser(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "User Deleted Successfully";
         }
         return "User Not Found";
@@ -134,9 +134,9 @@ public class UserInfoService implements UserDetailsService {
         return "Conducteur introuvable ❌";
     }
 
-    public String deleteDriver(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deleteDriver(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "Conducteur supprimé avec succès ✅";
         }
         return "Conducteur introuvable ❌";
@@ -161,10 +161,10 @@ public class UserInfoService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public String updatePassenger(String id, UserInfo passengerInfo) {
+    public String updatePassenger(String email, UserInfo passengerInfo) {
                 PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
-        Optional<UserInfo> existingPassenger = repository.findById(id);
+        Optional<UserInfo> existingPassenger = repository.findById(email);
         if (existingPassenger.isPresent()) {
             UserInfo passenger = existingPassenger.get();
             passenger.setEmail(passengerInfo.getEmail());
@@ -181,9 +181,9 @@ public class UserInfoService implements UserDetailsService {
 
 
 
-    public String deletePassenger(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public String deletePassenger(String email) {
+        if (repository.existsById(email)) {
+            repository.deleteById(email);
             return "Passager supprimé avec succès ✅";
         }
         return "Passager introuvable ❌";

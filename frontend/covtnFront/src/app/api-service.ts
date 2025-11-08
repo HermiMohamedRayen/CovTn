@@ -6,17 +6,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  
-  private apiUrl = 'http://localhost:9092/api'; 
+
+  private apiUrl = 'http://localhost:9092/api';
   constructor(private http: HttpClient) { }
 
 
-  login(user: {username: string, password: string}): Observable<String> {
-    return this.http.post<String>(`${this.apiUrl}/auth/login`, user,{ responseType: 'text' as 'json' });
+  login(user: { username: string, password: string }): Observable<String> {
+    return this.http.post<String>(`${this.apiUrl}/auth/login`, user, { responseType: 'text' as 'json' });
   }
   isAuthenticated(): Promise<boolean> {
     const token = localStorage.getItem('token');
-    if(token==null){
+    if (token == null) {
       return Promise.resolve(false);
     }
     return new Promise<boolean>((resolve) => {
@@ -36,8 +36,32 @@ export class ApiService {
     });
 
   }
-  signUp(user: {firstName: string, lastName: string, email: string, password: string}): Observable<any> {
+  signUp(user: { firstName: string, lastName: string, email: string, password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, user, { responseType: 'text' as 'json' });
   }
+
+  verifyEmail(verificationCode: any): Promise<boolean> {
+    console.log("Verifying email with code:", verificationCode);
+    return new Promise<boolean>((resolve) => {
+      this.http.post<String>(`${this.apiUrl}/auth/validateMail`,  verificationCode , { responseType: 'text' as 'json' }).subscribe({
+        next: (reponse) => {
+          const token = reponse;
+          localStorage.setItem('token', token.toString());
+          resolve(true);
+        },
+        error: (err : string) => {
+          console.error("Email verification failed:", err);
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  hasRole(role: string): boolean {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  return payload.roles.includes(role);
+}
 
 }

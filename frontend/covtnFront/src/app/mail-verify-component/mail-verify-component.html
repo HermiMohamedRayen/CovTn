@@ -1,0 +1,6 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+
+    <label for="verificationCode">Enter verification Code we sent to your email:</label>
+    <input type="number" formControlName="verificationCode">
+    <button type="submit">Verify</button>
+</form>
