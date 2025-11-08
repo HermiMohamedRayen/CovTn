@@ -188,6 +188,19 @@ public class UserInfoService implements UserDetailsService {
         }
         return "Passager introuvable ❌";
     }
+
+
+
+    public void makeAdmin(String email) {
+        Optional<UserInfo> userOpt = repository.findById(email);
+        if (userOpt.isPresent()) {
+            UserInfo user = userOpt.get();
+            user.addRole("ROLE_ADMIN");
+            repository.save(user);
+        } else {
+            throw new UsernameNotFoundException("Utilisateur introuvable : " + email);
+        }
+    }
 }
 
     
