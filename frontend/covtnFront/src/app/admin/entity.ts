@@ -15,7 +15,7 @@ export interface Entity {
 })
 export class EntityService {
   // Remplacez par l'URL de votre API backend
-  private apiUrl = 'http://localhost:9092/api/auth';
+  private apiUrl = 'http://localhost:9092/api/admin';
 
   constructor(private http: HttpClient) { }
 

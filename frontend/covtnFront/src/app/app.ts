@@ -21,6 +21,7 @@ export class App {
         this.loading = false;
       } 
     });
+    this.apiService.refreshToken();
 
   }
 

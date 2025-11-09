@@ -1,0 +1,113 @@
+package com.iset.covtn.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.iset.covtn.exceptions.UserDejaExistException;
+import com.iset.covtn.models.UserInfo;
+import com.iset.covtn.service.UserInfoService;
+
+public class AdminController {
+
+    @Autowired
+    private UserInfoService userService;
+
+     /**
+     * Liste de tous les utilisateurs (admin uniquement)
+     */
+    @GetMapping("/users")
+    public ResponseEntity<List<UserInfo>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+
+    /**
+     * Supprimer un utilisateur (admin uniquement)
+     */
+    @DeleteMapping("/users/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        try {
+            String result = userService.deleteUser(email);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Utilisateur introuvable avec l'email : " + email);
+        }
+    }
+    @PutMapping("/Updateusers/{email}")
+    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UserInfo userInfo) {
+        return ResponseEntity.ok(userService.updateUser(email, userInfo));
+    }
+    @GetMapping("/users/{email}")
+    public ResponseEntity<UserInfo> getUserByEmail(@PathVariable String email) {
+        UserInfo user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+    @PostMapping("/addUser")
+    public ResponseEntity<String> addUser(@RequestBody UserInfo userInfo) {
+        try{
+            return ResponseEntity.ok(userService.addUser(userInfo));
+        } catch (UserDejaExistException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body( e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
+        }
+    }
+
+    /**
+     * CRUD pour les conducteurs (Driver)
+     */
+    @PostMapping("/drivers")
+    public ResponseEntity<String> addDriver(@RequestBody UserInfo driverInfo) {
+        return ResponseEntity.ok(userService.addDriver(driverInfo));
+    }
+
+    @GetMapping("/drivers")
+    public ResponseEntity<List<UserInfo>> getAllDrivers() {
+        return ResponseEntity.ok(userService.getAllDrivers());
+    }
+
+    @PutMapping("/drivers/{id}")
+    public ResponseEntity<String> updateDriver(@PathVariable String id, @RequestBody UserInfo driverInfo) {
+        return ResponseEntity.ok(userService.updateDriver(id, driverInfo));
+    }
+
+    @DeleteMapping("/drivers/{email}")
+    public ResponseEntity<String> deleteDriver(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deleteDriver(email));
+    }
+
+
+    @PostMapping("/passengers")
+    public ResponseEntity<String> addPassenger(@RequestBody UserInfo passengerInfo) {
+        return ResponseEntity.ok(userService.addPassenger(passengerInfo));
+    }
+
+    @GetMapping("/passengers")
+    public ResponseEntity<List<UserInfo>> getAllPassengers() {
+        return ResponseEntity.ok(userService.getAllPassengers());
+    }
+
+    @PutMapping("/passengers/{email}")
+    public ResponseEntity<String> updatePassenger(@PathVariable String email, @RequestBody UserInfo passengerInfo) {
+        return ResponseEntity.ok(userService.updatePassenger(email, passengerInfo));
+    }
+
+    @DeleteMapping("/passengers/{email}")
+    public ResponseEntity<String> deletePassenger(@PathVariable String email) {
+        return ResponseEntity.ok(userService.deletePassenger(email));
+    }
+    
+
+}

@@ -41,7 +41,6 @@ export class ApiService {
   }
 
   verifyEmail(verificationCode: any): Promise<boolean> {
-    console.log("Verifying email with code:", verificationCode);
     return new Promise<boolean>((resolve) => {
       this.http.post<String>(`${this.apiUrl}/auth/validateMail`,  verificationCode , { responseType: 'text' as 'json' }).subscribe({
         next: (reponse) => {
@@ -63,5 +62,24 @@ export class ApiService {
   const payload = JSON.parse(atob(token.split('.')[1]));
   return payload.roles.includes(role);
 }
+  refreshToken() {
+    const token = localStorage.getItem('token');
+    const retoken = this.http.get<String>(`${this.apiUrl}/auth/refreshToken`, {
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: 'text' as 'json'
+    });
+    retoken.subscribe({
+      next: (newToken) => {
+        console.log('Token refreshed successfully');
+        localStorage.setItem('token', newToken.toString());
+      },
+      error: (err) => {
+        console.error('Error refreshing token:', err);
+      }
+    });
+  }
+  logout() {
+    localStorage.clear();
+  }
 
 }
