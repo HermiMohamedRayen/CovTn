@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../api-service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -9,13 +10,10 @@ import { Router } from '@angular/router';
 })
 export class NavBar {
 
-  constructor(private router: Router) {}
+  constructor(protected apiService: ApiService, private router: Router) {}
 
   logout() {
-    // Clear any stored authentication tokens
-    localStorage.removeItem('token');
-    
-    // Navigate to login page
+    this.apiService.logout();
     window.location.reload()
   }
 

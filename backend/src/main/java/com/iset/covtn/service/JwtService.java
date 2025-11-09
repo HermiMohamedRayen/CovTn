@@ -73,4 +73,11 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String refreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        String username = claims.getSubject();
+
+        return createToken(claims, username);
+    }
 }

@@ -35,7 +35,6 @@ export class MailVerifyComponent {
       return;
     }
     this.elem.code = code;
-    console.log(this.elem);
     this.apiService.verifyEmail(this.elem).then((isValid) => {
       if (isValid) {
         alert('Email verified successfully! You can now access your account.');
