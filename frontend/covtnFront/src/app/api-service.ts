@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,6 +9,8 @@ export class ApiService {
 
   private apiUrl = 'http://localhost:9092/api';
   constructor(private http: HttpClient) { }
+
+  public static user = signal<any>(null);
 
 
   login(user: { username: string, password: string }): Observable<String> {
@@ -25,7 +27,8 @@ export class ApiService {
           'Authorization': `Bearer ${token}`
         }
       }).subscribe({
-        next: () => {
+        next: (user) => {
+          ApiService.user.set(user);
           resolve(true);
         },
         error: () => {

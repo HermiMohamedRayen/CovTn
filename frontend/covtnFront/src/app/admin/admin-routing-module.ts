@@ -14,7 +14,7 @@ const routes: Routes = [
       { path: 'entities', component: EntityList },
       { path: 'entities/new', component: EntityForm },
       { path: 'entities/delete/:email', component: EntityList },
-      { path: 'entities/edit/:email', component: EntityList },
+      { path: 'entities/edit', component: EntityForm },
       { path: '', redirectTo: 'entities', pathMatch: 'full' },
     ],
   },

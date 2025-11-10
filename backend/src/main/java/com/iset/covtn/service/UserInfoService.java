@@ -26,7 +26,6 @@ public class UserInfoService implements UserDetailsService {
 
     private final ObjectProvider<PasswordEncoder> passwordEncoderProvider;
 
-    @Autowired
     public UserInfoService(ObjectProvider<PasswordEncoder> passwordEncoderProvider) {
         this.passwordEncoderProvider = passwordEncoderProvider;
     }
@@ -65,17 +64,18 @@ public class UserInfoService implements UserDetailsService {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable : " + email));
     }
-    public String updateUser(String id, UserInfo updatedUserInfo) {
-        Optional<UserInfo> existingUser = repository.findById(id);
-                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
+    public String updateUser(UserInfo updatedUserInfo) {
+        Optional<UserInfo> existingUser = repository.findById(updatedUserInfo.getEmail());
+        PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
         if (existingUser.isPresent()) {
             UserInfo user = existingUser.get();
-            user.setEmail(updatedUserInfo.getEmail());
             if (updatedUserInfo.getPassword() != null && !updatedUserInfo.getPassword().isEmpty()) {
-                user.setPassword(encoder.encode(updatedUserInfo.getPassword()));
+                updatedUserInfo.setPassword(encoder.encode(updatedUserInfo.getPassword()));
+            }else{
+                updatedUserInfo.setPassword(user.getPassword());
             }
-            repository.save(user);
+            repository.save(updatedUserInfo);
             return "User Updated Successfully";
         }
         return "User Not Found";
@@ -92,6 +92,17 @@ public class UserInfoService implements UserDetailsService {
     public List<UserInfo> getAllUsers() {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    public boolean updateProfilePicture(String email, String filename) {
+        Optional<UserInfo> userOpt = repository.findById(email);
+        if (userOpt.isPresent()) {
+            UserInfo user = userOpt.get();
+            user.setProfilePicture(filename);
+            repository.save(user);
+            return true;
+        }
+        return false;
     }
 
 

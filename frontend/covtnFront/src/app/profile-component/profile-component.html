@@ -1,0 +1,92 @@
+<div class="profile-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <button class="back-button" (click)="previousPage()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h1>Profile</h1>
+      <div class="spacer"></div>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="avatar">
+        <i class="bi bi-person"></i>
+      </div>
+      <h2>{{ user().firstName }} {{ user().lastName }}</h2>
+      <p>{{ user().email }}</p>
+      <div class="rating">
+        <i class="bi bi-star"></i>
+        <span>N/A</span>
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="info-card">
+      <h3>Contact Information</h3>
+      <div class="contact-list">
+        <div class="contact-item">
+          <div class="icon-container">
+            <i class="bi bi-telephone"></i>
+          </div>
+          <span>{{ user().phone || 'N/A' }}</span>
+        </div>
+
+        <div class="contact-item">
+          <div class="icon-container">
+            <i class="bi bi-envelope-at-fill"></i>
+          </div>
+          <span>{{ user().email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="info-card">
+      <h3>Settings</h3>
+
+      <!-- Dark Theme -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="icon-container">
+            <i class="bi bi-palette"></i>
+          </div>
+          <div>
+            <span>Dark Theme</span>
+            <p>Dark mode interface</p>
+          </div>
+        </div>
+       
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Languages -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="icon-container">
+            <i class="bi bi-globe"></i>
+          </div>
+          <div>
+            <span>Language</span>
+            <p>Interface language</p>
+          </div>
+        </div>
+        <!-- <mat-select [(ngModel)]="language" class="language-select">
+          <mat-option value="FR">French</mat-option>
+          <mat-option value="AR">Arabic</mat-option>
+          <mat-option value="EN">English</mat-option>
+        </mat-select> -->
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <button mat-button class="logout-button" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</div>

@@ -1,6 +1,5 @@
 <div class="list-container">
-  <h2>Liste des Entités</h2>
-  <button class="add-button" [routerLink]="['/admin/entities/new']">Ajouter une nouvelle Entité</button>
+  <h2>User List</h2>
 
   <table class="entity-table">
     <thead>
@@ -14,8 +13,8 @@
         <td>{{ entity.firstName }}</td>
         <td>{{ entity.description }}</td>
         <td>
-          <button class="edit-button" (click)="editEntity(entity.id)">Modifier</button>
-          <button class="delete-button" (click)="deleteEntity(entity.id)">Supprimer</button>
+          <button class="edit-button" (click)="editEntity(entity.email)">Modifier</button>
+          <button class="delete-button" (click)="deleteEntity(entity.email)">Supprimer</button>
         </td>
       </tr>
     </tbody>

@@ -11,6 +11,9 @@ import { MainComponent } from './main-component/main-component';
 import { NavBar } from './nav-bar/nav-bar';
 import { AuthentificationComponent } from './authentification-component/authentification-component';
 import { MailVerifyComponent } from './mail-verify-component/mail-verify-component';
+import { ProfileComponent } from './profile-component/profile-component';
+
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -22,13 +25,16 @@ import { MailVerifyComponent } from './mail-verify-component/mail-verify-compone
     NavBar,
     AuthentificationComponent,
     MailVerifyComponent,
+    ProfileComponent,
+
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSlideToggleModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()

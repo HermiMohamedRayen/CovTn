@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.UserInfo;
 import com.iset.covtn.service.UserInfoService;
 
+
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
 
     @Autowired
@@ -43,13 +48,15 @@ public class AdminController {
                     .body("Utilisateur introuvable avec l'email : " + email);
         }
     }
-    @PutMapping("/Updateusers/{email}")
-    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UserInfo userInfo) {
-        return ResponseEntity.ok(userService.updateUser(email, userInfo));
+    @PutMapping("/Updateusers")
+    public ResponseEntity<Void> updateUser(@RequestBody UserInfo userInfo) {
+        userService.updateUser(userInfo);
+        return ResponseEntity.ok().build();
     }
     @GetMapping("/users/{email}")
     public ResponseEntity<UserInfo> getUserByEmail(@PathVariable String email) {
         UserInfo user = userService.findByEmail(email);
+        user.setPassword(""); // Ne pas exposer le mot de passe
         return ResponseEntity.ok(user);
     }
     @PostMapping("/addUser")

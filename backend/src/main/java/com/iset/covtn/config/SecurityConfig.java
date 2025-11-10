@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,7 +36,7 @@ public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     private final JwtAuthFiltrer jwtAuthFilter;
-    private final @Lazy UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     /**
      * Configuration CORS pour autoriser le front Angular
@@ -74,7 +73,7 @@ public class SecurityConfig {
                         // Routes protégées par rôles
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/driver/**").hasAnyAuthority("ROLE_DRIVER", "ROLE_ADMIN")
-                        .requestMatchers("/api/passenger/**").hasAnyAuthority("ROLE_PASSENGER", "ROLE_ADMIN")
+                        .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_PASSENGER", "ROLE_ADMIN")
 
                         // Toute autre route nécessite une authentification
                         .anyRequest().authenticated()
