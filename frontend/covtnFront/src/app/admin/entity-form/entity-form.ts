@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Entity, EntityService } from '../entity';
@@ -16,35 +16,38 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ]
 })
-export class EntityForm implements OnInit {
+export class EntityForm  {
   entityForm: FormGroup;
-  isEditMode = false;
+  isEditMode = true;
   entityId: String | null = null;
+  userData = signal<any>(null);
 
   constructor(
     private fb: FormBuilder,
     private entityService: EntityService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
+    const nav = this.router.getCurrentNavigation();
+      this.entityId = nav?.extras.state?.['email'];
+      if(!this.entityId){
+        this.router.navigate(['/admin']);
+      }
+      this.entityService.getById(String(this.entityId)).subscribe({
+        next: (entity) => {
+          this.entityForm.patchValue(entity);
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement de l\'entité', err);
+        }
+      });
     this.entityForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      password: ['', Validators.required],
+      password: [''],
       roles: ['', Validators.required] 
       // Ajoutez d'autres contrôles de formulaire ici
-    });
-  }
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('email');
-      if (id) {
-        this.isEditMode = true;
-        this.entityId = id;
-        this.loadEntity(id);
-      }
     });
   }
 
@@ -65,9 +68,9 @@ export class EntityForm implements OnInit {
 
       if (this.isEditMode && this.entityId !== null) {
         // Mode Mise à jour (Update)
-        this.entityService.update(String(this.entityId), entity).subscribe({
+        this.entityService.update( entity).subscribe({
           next: () => {
-            this.router.navigate(['/admin/entities/edit', this.entityId]);
+            alert('Entity updated successfully');
           },
           error: (err) => {
             console.error('Erreur lors de la mise à jour de l\'entité', err);

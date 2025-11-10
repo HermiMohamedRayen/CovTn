@@ -9,16 +9,18 @@ import { GuardsCheckEnd, GuardsCheckStart, NavigationCancel, Router } from '@ang
   styleUrl: './app.css'
 })
 export class App {
-  protected loading = true;
+  public static loading = signal(false);
+  public loading = App.loading;
+
 
   constructor(private apiService: ApiService,private router: Router) {
     
     this.router.events.subscribe(event => {
       if (event instanceof GuardsCheckStart) {
-        this.loading = true;
+        App.loading.set(true);
       }     
       if (event instanceof GuardsCheckEnd || event instanceof NavigationCancel) {
-        this.loading = false;
+        App.loading.set(false);
       } 
     });
     this.apiService.refreshToken();

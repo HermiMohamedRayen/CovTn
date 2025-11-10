@@ -19,6 +19,7 @@ public class UserInfo {
     private String lastName;
     private String password;
     private HashSet<String> roles; // ROLE_PASSENGER , ROLE_ADMIN, ROLE_DRIVER
+    private String profilePicture; // Store the filename or URL of the profile picture
 
      public void addRole(String role) {
         if (this.roles == null) {

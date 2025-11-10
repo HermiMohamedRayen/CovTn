@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { Entity, EntityService } from '../entity';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -37,13 +37,14 @@ export class EntityList implements OnInit {
     });
   }
 
-  editEntity(id: number): void {
-    this.router.navigate(['/admin/entities/edit', id]);
+  editEntity(email: string): void {
+    const extras: NavigationExtras = { state: { email: email } };
+    this.router.navigate(['admin/entities/edit'], extras);
   }
 
-  deleteEntity(id: number): void {
+  deleteEntity(email: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette entité ?')) {
-      this.entityService.delete(String(id)).subscribe({
+      this.entityService.delete(email).subscribe({
         next: () => {
           this.loadEntities(); // Recharger la liste après suppression
         },

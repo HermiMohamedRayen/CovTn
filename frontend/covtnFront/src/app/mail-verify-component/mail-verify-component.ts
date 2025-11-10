@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../api-service';
+import { App } from '../app';
 
 @Component({
   selector: 'app-mail-verify-component',
@@ -35,7 +36,9 @@ export class MailVerifyComponent {
       return;
     }
     this.elem.code = code;
+    App.loading.set(true);
     this.apiService.verifyEmail(this.elem).then((isValid) => {
+      App.loading.set(false);
       if (isValid) {
         alert('Email verified successfully! You can now access your account.');
         this.router.navigate(['/']);

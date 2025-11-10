@@ -1,7 +1,9 @@
 <nav class="navbar">
     <h1 class="navbar-title">CovTn</h1>
     @if (this.apiService.hasRole('ROLE_ADMIN')) {
-        <a class="navbar-link" routerLink="/admin">Admin</a>
+        <a class="navbar-link-admin" routerLink="/admin">Admin</a>
     }
-    <button class="logout-btn" (click)="logout()">Logout</button>
+    <button class="profile-button" routerLink="/profile">
+        <i class="bi bi-person"></i>
+    </button>
 </nav>

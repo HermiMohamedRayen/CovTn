@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class CovtnApplication {
+	public static final String currentLocation = System.getProperty("user.dir");
 
 	public static void main(String[] args) {
 		SpringApplication.run(CovtnApplication.class, args);

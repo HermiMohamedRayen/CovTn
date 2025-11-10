@@ -21,12 +21,14 @@ export class EntityService {
 
   // READ - Récupérer toutes les entités
   getAll(): Observable<Entity[]> {
-    return this.http.get<Entity[]>(`${this.apiUrl}/users`);
+    return this.http.get<Entity[]>(`${this.apiUrl}/users`,
+      {headers:{'Authorization': `Bearer ${localStorage.getItem('token')}`}}
+    );
   }
 
   // READ - Récupérer une entité par ID
   getById(email: string): Observable<Entity> {
-    return this.http.get<Entity>(`${this.apiUrl}/users/${email}`, { responseType: 'text' as 'json' });
+    return this.http.get<Entity>(`${this.apiUrl}/users/${email}`, {headers:{'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   }
 
   // CREATE - Créer une nouvelle entité
@@ -35,8 +37,8 @@ export class EntityService {
   }
 
   // UPDATE - Mettre à jour une entité existante
-  update(email: string, entity: Entity): Observable<Entity> {
-    return this.http.put<Entity>(`${this.apiUrl}/Updateusers/${email}`, entity);
+  update( entity: Entity): Observable<Entity> {
+    return this.http.put<Entity>(`${this.apiUrl}/Updateusers`, entity, {headers:{'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   }
 
   // DELETE - Supprimer une entité
