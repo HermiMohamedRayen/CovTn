@@ -26,6 +26,14 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="number">Numéro de téléphone :</label>
+      <input id="number" type="text" formControlName="number" required />
+      <div *ngIf="entityForm.get('number')?.invalid && entityForm.get('number')?.touched" class="error-message">
+        Le numéro de téléphone est requis.
+      </div>
+    </div>
+
     <div class="form-group" >
       <label for="password">Mot de passe :</label>
       <input id="password" type="password" formControlName="password"  />

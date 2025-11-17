@@ -1,0 +1,9 @@
+<h4 class="ride-title text-center">{{ ride_item().from }} → {{ ride_item().to }}</h4>
+<p class="ride-meta">
+    <span class="ride-route">{{ ride_item().departureTime | date:'yyyy-MM-dd HH:mm' }}</span>
+    <span class="ride-date">{{ ride_item().arrivalTime | date:'yyyy-MM-dd HH:mm' }}</span>
+</p>
+<p class="ride-desc">available seats: {{ ride_item().seats }}</p>
+                <button class="ride-action" (click)="viewRide()" [disabled]="loading">View</button>
+
+<ng-content></ng-content>

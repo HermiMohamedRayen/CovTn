@@ -14,15 +14,26 @@
   <div class="profile-content">
     <!-- Profile Header -->
     <div class="profile-header">
-      <div class="avatar">
+        <div class="avatar" *ngIf="noimg == -1"> 
+          <i class="spinner"></i>
+        </div>
+      
+      
+     
+
+      <div class="avatar" *ngIf="noimg == 0" (click)="updateimg()">
         <i class="bi bi-person"></i>
       </div>
+        <img [src]="imgUrl" alt="Profile Image" class="avatar" (click)="updateimg()" *ngIf="noimg == 1" />
+
+    
       <h2>{{ user().firstName }} {{ user().lastName }}</h2>
       <p>{{ user().email }}</p>
-      <div class="rating">
+      
+      @if (apiService.hasRole("ROLE_DRIVER")){<div class="rating">
         <i class="bi bi-star"></i>
         <span>N/A</span>
-      </div>
+      </div>}
     </div>
 
     <!-- Contact Info -->
@@ -33,7 +44,8 @@
           <div class="icon-container">
             <i class="bi bi-telephone"></i>
           </div>
-          <span>{{ user().phone || 'N/A' }}</span>
+          <span (dblclick)="updatePhoneNumber()">{{ user().number || 'N/A' }}</span>
+          <small>Double-click to update</small>
         </div>
 
         <div class="contact-item">
@@ -50,38 +62,28 @@
       <h3>Settings</h3>
 
       <!-- Dark Theme -->
-      <div class="setting-item">
+      <div class="setting-item" *ngIf="user().car" (click)="viewCar()">
         <div class="setting-info">
           <div class="icon-container">
-            <i class="bi bi-palette"></i>
+            <i class="bi bi-car-front"></i>
           </div>
-          <div>
-            <span>Dark Theme</span>
-            <p>Dark mode interface</p>
+            <span>My car</span>
+            
+        </div>
+       
+      </div>
+      <div class="setting-item" *ngIf="user().rides && user().rides.length > 0" routerLink="/my-rides">
+        <div class="setting-info">
+          <div class="icon-container">
+            <i class="bi bi-car-front"></i>
           </div>
+            <span>My rides</span>
+            
         </div>
        
       </div>
 
-      <div class="divider"></div>
 
-      <!-- Languages -->
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="icon-container">
-            <i class="bi bi-globe"></i>
-          </div>
-          <div>
-            <span>Language</span>
-            <p>Interface language</p>
-          </div>
-        </div>
-        <!-- <mat-select [(ngModel)]="language" class="language-select">
-          <mat-option value="FR">French</mat-option>
-          <mat-option value="AR">Arabic</mat-option>
-          <mat-option value="EN">English</mat-option>
-        </mat-select> -->
-      </div>
     </div>
 
     <!-- Logout Button -->

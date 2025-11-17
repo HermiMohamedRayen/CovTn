@@ -69,8 +69,8 @@ h2 {
 }
 
 .avatar {
-  width: 6rem;
-  height: 6rem;
+  width: 10rem;
+  height: 10rem;
   background: linear-gradient(to bottom right, #10b981, #059669);
   border-radius: 50%;
   display: flex;
@@ -78,10 +78,11 @@ h2 {
   justify-content: center;
   margin: 0 auto 1rem auto;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .avatar i {
-  font-size: 3rem;
+  font-size: 5rem;
   color: white;
 }
 
@@ -157,4 +158,20 @@ h2 {
 
 .rating i {
   color: #fbbf24;
+}
+
+
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #67d55d;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

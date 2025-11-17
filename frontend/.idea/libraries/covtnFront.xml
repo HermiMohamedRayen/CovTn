@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="covtnFront">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/covtnFront.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

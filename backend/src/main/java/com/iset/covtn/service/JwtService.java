@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
+import io.jsonwebtoken.io.Decoders;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final String SECRET = "iobygitcverysxoukytvytvuytvcuycvutcrvtyvuylbiubilutrxfesezawxgbhn618915981oiuhityfhiuobhotyvf";
+    private final SecretKey SECRET_KEY = getSignKey();  //Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -29,6 +31,11 @@ public class JwtService {
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    private SecretKey getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
     
 

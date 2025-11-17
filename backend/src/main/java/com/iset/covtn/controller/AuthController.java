@@ -131,8 +131,11 @@ public class AuthController {
                             authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
+
                 AuthObj authObj = mailVerifier(authRequest.getUsername(),
                     jwtService.generateToken((UserDetails) authentication.getPrincipal()));
+
+
                 
                 return ResponseEntity.ok(authObj);
             }
@@ -140,6 +143,7 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants incorrects.");
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur d'authentification : " + e.getMessage());
         }

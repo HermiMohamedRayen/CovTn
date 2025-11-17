@@ -18,10 +18,11 @@ export class AuthentificationComponent {
   protected userData: any;
 
   constructor(private apiService: ApiService,private router: Router) {
-    this.apiService.isAuthenticated().then((authenticated => {
-      this.auth = authenticated;
-      this.router.navigate(['/']);
-    }));
+    this.apiService.isAuthenticated().then((isAuth) => {
+      if (isAuth) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
  
@@ -50,8 +51,15 @@ export class AuthentificationComponent {
         this.router.navigate(['/mail-verify'], toVerify);
         App.loading.set(false);
       },
-      error: (error) => {
-        alert("Login failed: " + error.error);
+      error: (error : any) => {
+        
+        console.log('Login error:', error);
+        if(error.status === 401){
+          alert("email or password are incorrect ");
+        }
+        if(error.status === 0){
+          alert("connection to server failed ");
+        }
         App.loading.set(false);
       }
     });

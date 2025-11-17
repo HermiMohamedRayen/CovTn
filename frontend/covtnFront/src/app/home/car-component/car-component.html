@@ -1,0 +1,76 @@
+<div class="pb-4 mt-5" >
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg border">
+  <h2 class="text-2xl font-semibold mb-5 text-center">Add your Car</h2>
+
+  <form [formGroup]="form" class="space-y-4" (ngSubmit)="onSubmit()">
+
+    <!-- Matriculation Number -->
+    <div>
+      <label class="block font-medium">Matriculation Number</label>
+      <input class="input" formControlName="matriculationNumber" placeholder="e.g. 123 TU 4567" />
+    </div>
+
+    <!-- Model -->
+    <div>
+      <label class="block font-medium">Model</label>
+      <input class="input" formControlName="model" placeholder="e.g. Peugeot 208" />
+    </div>
+
+    <!-- Seats -->
+    <div>
+      <label class="block font-medium">Seats</label>
+      <input type="number" min="1" class="input" formControlName="seats" />
+    </div>
+
+    <!-- Toggles -->
+    <div class="flex gap-4">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" formControlName="airConditioner" />
+        <span>Air Conditioner</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" formControlName="smoker" />
+        <span>Smoker Allowed</span>
+      </label>
+    </div>
+
+    
+    <!-- PHOTO FIELD -->
+    <div>
+      <label class="block font-medium mb-1">Photos (URLs)</label>
+
+      <div class="flex gap-2">
+        <input #photoRef type="file" multiple class="input flex-1" placeholder="Image URL...">
+        <button type="button"
+            (click)="addPhoto(photoRef); photoRef.value='';"
+            class="px-4 py-2 bg-gray-800 text-white rounded-lg">
+          Add
+        </button>
+      </div>
+
+      <!-- Preview -->
+      <div class="grid grid-cols-3 gap-3 mt-3">
+        <div *ngFor="let p of photosUrls ; let i = index"
+             class="relative border rounded-lg overflow-hidden bg-gray-50">
+
+          <img [src]="p" class="w-full h-24 object-cover" />
+
+          <button type="button"
+                  class="absolute top-1 right-1 bg-red-500 text-white rounded-full px-2"
+                  (click)="removePhoto(i)">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      class="w-full py-3 rounded-xl text-white font-medium bg-blue-600 hover:bg-blue-700 transition"
+      type="submit">
+      Save Car
+    </button>
+  </form>
+</div>
+</div>

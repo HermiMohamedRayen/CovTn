@@ -32,7 +32,6 @@ public class FileSystemStorageService {
 			}
 			String filename = System.currentTimeMillis()+ "_"+ file.getOriginalFilename();
 
-			System.out.println("filename: " + filename);
 
 			Path destinationFile = this.rootLocation.resolve(
 					Paths.get(filename))
@@ -50,7 +49,7 @@ public class FileSystemStorageService {
 			}
 		}
 		catch (IOException e) {
-			throw new StorageException("Failed to store file."+e.getMessage());
+			throw new StorageException("Failed to store file."+e);
 		}
 	}
 

@@ -1,0 +1,39 @@
+
+.ride-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.ride-meta {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ride-desc {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+.ride-center {
+    text-align: center;
+}
+
+.ride-action {
+    margin-top: 6px;
+    align-self: center;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid #38d24d;
+    color: #0f172a;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button[disabled].ride-action {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

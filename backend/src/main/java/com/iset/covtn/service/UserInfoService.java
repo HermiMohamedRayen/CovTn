@@ -1,12 +1,17 @@
 package com.iset.covtn.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.iset.covtn.models.Car;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,6 +80,7 @@ public class UserInfoService implements UserDetailsService {
             }else{
                 updatedUserInfo.setPassword(user.getPassword());
             }
+            updatedUserInfo.setProfilePicture(user.getProfilePicture());
             repository.save(updatedUserInfo);
             return "User Updated Successfully";
         }
@@ -104,6 +110,55 @@ public class UserInfoService implements UserDetailsService {
         }
         return false;
     }
+    public ResponseEntity<Resource> getProfilePicture(String email) {
+        Optional<UserInfo> userOpt = repository.findById(email);
+        if (userOpt.isPresent()) {
+            UserInfo user = userOpt.get();
+            String filename = user.getProfilePicture();
+            if (filename != null) {
+                FileSystemStorageService fileStorageService = new FileSystemStorageService();
+                try {
+                    return ResponseEntity.ok(fileStorageService.loadAsResource(filename));
+                }catch (Exception e) {
+                    ResponseEntity.notFound().build();
+                }
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    public boolean becomeDriver(String email) {
+        Optional<UserInfo> userOpt = repository.findById(email);
+        if (userOpt.isPresent()) {
+            UserInfo user = userOpt.get();
+            if(user.getNumber() == 0){
+                return false;
+            }
+            user.addRole("ROLE_DRIVER");
+            repository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public void setCar(Car car, String email) {
+        System.out.println("saving 1");
+        Optional<UserInfo> userOpt = repository.findById(email);
+        if (userOpt.isPresent()) {
+            UserInfo user = userOpt.get();
+            System.out.println("saving 2");
+            user.setCar(car);
+            repository.save(user);
+        }
+
+    }
+
+
+    public Resource getCarPhoto(String name) {
+        FileSystemStorageService fileStorageService = new FileSystemStorageService();
+        return fileStorageService.loadAsResource(name);
+
+    }
 
 
 
@@ -113,14 +168,7 @@ public class UserInfoService implements UserDetailsService {
     // 🔹 MÉTHODES SPÉCIFIQUES : DRIVERS
     // ---------------------------------------------------------
 
-    public String addDriver(UserInfo driverInfo) {
-                PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
 
-        driverInfo.addRole("ROLE_DRIVER");
-        driverInfo.setPassword(encoder.encode(driverInfo.getPassword()));
-        repository.save(driverInfo);
-        return "Conducteur ajouté avec succès ✅";
-    }
 
     public List<UserInfo> getAllDrivers() {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
