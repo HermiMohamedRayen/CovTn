@@ -24,15 +24,13 @@ h2 {
 }
 .profile-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  animation: fadeIn 0.5s ease;
+  background-color: #f9fafb;
 }
 
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-  border-bottom: none;
-  animation: slideDown 0.3s ease;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .header-content {
@@ -40,36 +38,21 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: white;
-}
-
-.header-content h1 {
-  color: white;
-  font-weight: 700;
-  letter-spacing: 0.5px;
 }
 
 .back-button {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #f3f4f6;
   border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  color: white;
-  border: none;
-  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .back-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: translateX(-2px);
-}
-
-.back-button i {
-  font-size: 1.25rem;
+  background-color: #e5e7eb;
 }
 
 .spacer {
@@ -83,44 +66,24 @@ h2 {
 .profile-header {
   text-align: center;
   margin-bottom: 1.5rem;
-  animation: slideUp 0.5s ease;
 }
 
 .avatar {
   width: 10rem;
   height: 10rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(to bottom right, #10b981, #059669);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem auto;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: all 0.3s ease;
-  border: 4px solid white;
-}
-
-.avatar:hover {
-  transform: scale(1.05) translateY(-5px);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
 }
 
 .avatar i {
   font-size: 5rem;
   color: white;
-}
-
-.profile-header h2 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0.5rem 0;
-}
-
-.profile-header p {
-  color: #667eea;
-  font-weight: 600;
 }
 
 .rating {
@@ -129,31 +92,14 @@ h2 {
   justify-content: center;
   gap: 0.5rem;
   margin-top: 0.5rem;
-  animation: slideUp 0.6s ease;
 }
 
 .info-card {
-  background: white;
+  background-color: white;
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
-  border: 1px solid #e0e0e0;
-  animation: slideUp 0.5s ease;
-}
-
-.info-card:hover {
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
-  transform: translateY(-2px);
-  border-color: #667eea;
-}
-
-.info-card h3 {
-  color: #2c3e50;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
 }
 
 .contact-list {
@@ -171,20 +117,11 @@ h2 {
 .icon-container {
   width: 2.5rem;
   height: 2.5rem;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background-color: #ecfdf5;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #667eea;
-  transition: all 0.3s ease;
-}
-
-.contact-item:hover .icon-container,
-.setting-item:hover .icon-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  transform: scale(1.1);
 }
 
 .divider {
@@ -207,22 +144,16 @@ h2 {
 .logout-button {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
-  border: 2px solid #e74c3c;
+  border: 2px solid #fecaca;
   border-radius: 1rem;
-  color: #e74c3c;
+  color: #dc2626;
   font-weight: 600;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-size: 1rem;
+  transition: all 0.2s;
 }
 
 .logout-button:hover {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: white;
-  border-color: #c0392b;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+  background-color: #fee2e2;
+  border-color: #fca5a5;
 }
 
 .rating i {
@@ -233,7 +164,7 @@ h2 {
 
 .spinner {
     border: 8px solid #f3f3f3;
-    border-top: 8px solid #667eea;
+    border-top: 8px solid #67d55d;
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -243,35 +174,4 @@ h2 {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
