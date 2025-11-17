@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiService } from '../api-service';
 
 // Interface pour l'entité générique
 export interface Entity {
@@ -17,12 +18,15 @@ export class EntityService {
   // Remplacez par l'URL de votre API backend
   private apiUrl = 'http://localhost:9092/api/admin';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService
+  ) { }
 
   // READ - Récupérer toutes les entités
   getAll(): Observable<Entity[]> {
     return this.http.get<Entity[]>(`${this.apiUrl}/users`,
-      {headers:{'Authorization': `Bearer ${localStorage.getItem('token')}`}}
+      {headers:{'Authorization': `Bearer ${this.apiService.loadToken()}`}}
     );
   }
 

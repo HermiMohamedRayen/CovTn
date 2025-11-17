@@ -1,5 +1,6 @@
 package com.iset.covtn.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ public class AuthObj {
     private String email;
     private String id;
     private String code;
+    @JsonIgnore
     private String token;
     @Override
     public boolean equals(Object obj) {

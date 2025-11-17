@@ -1,0 +1,29 @@
+
+<main class="main-content">
+    <section class="search-section" aria-labelledby="search-heading">
+
+        
+                <button type="submit" class="search-btn" aria-label="Search"
+                 routerLink="/search">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <span class="btn-text">Search</span>
+                </button>
+                <button type="submit" class="search-btn" aria-label="Propose a ride" (click)="proposeRide()">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                    <span class="btn-text">Propose a ride</span>
+                </button>
+           
+    </section>
+
+    <section class="latest-rides" aria-labelledby="latest-heading">
+        <h3 id="latest-heading">Latest rides</h3>
+        <div class="rides-list">
+            <article class="ride-card" *ngFor="let ride of latestRides; let i = index" [attr.data-index]="i" aria-label="Ride {{ride.title}}">
+                <app-ride-item [ride]="ride">
+                </app-ride-item>
+            </article>
+        </div>
+        <div *ngIf="!latestRides || latestRides.length === 0" class="no-rides">No recent rides available.</div>
+    </section>
+
+</main>

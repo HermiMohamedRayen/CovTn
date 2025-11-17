@@ -75,10 +75,7 @@ public class AdminController {
     /**
      * CRUD pour les conducteurs (Driver)
      */
-    @PostMapping("/drivers")
-    public ResponseEntity<String> addDriver(@RequestBody UserInfo driverInfo) {
-        return ResponseEntity.ok(userService.addDriver(driverInfo));
-    }
+
 
     @GetMapping("/drivers")
     public ResponseEntity<List<UserInfo>> getAllDrivers() {

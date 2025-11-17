@@ -78,6 +78,7 @@ public class SecurityConfig {
                         // Toute autre route nécessite une authentification
                         .anyRequest().authenticated()
                 )
+                /*
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             logger.error("🔒 Échec d'authentification : {}", authException.getMessage());
@@ -87,7 +88,10 @@ public class SecurityConfig {
                             logger.error("🚫 Accès refusé : {}", accessDeniedException.getMessage());
                             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé");
                         })
-                );
+                )
+
+                 */
+                 ;
 
         return http.build();
     }

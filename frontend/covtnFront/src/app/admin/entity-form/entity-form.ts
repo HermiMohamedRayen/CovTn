@@ -46,7 +46,8 @@ export class EntityForm  {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       password: [''],
-      roles: ['', Validators.required] 
+      roles: ['', Validators.required],
+      number: ['', Validators.required]
       // Ajoutez d'autres contrôles de formulaire ici
     });
   }

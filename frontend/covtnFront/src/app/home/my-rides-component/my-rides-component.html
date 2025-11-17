@@ -1,0 +1,11 @@
+<main class="main-content">
+<section class="latest-rides" aria-labelledby="latest-heading">
+        <div class="rides-list">
+            <article class="ride-card" *ngFor="let ride of rides; let i = index" [attr.data-index]="i" aria-label="Ride {{ride.title}}">
+                <app-ride-item [ride]="ride">
+                </app-ride-item>
+            </article>
+        </div>
+        <div *ngIf="!rides || rides.length === 0" class="no-rides">No recent rides available.</div>
+    </section>
+</main>

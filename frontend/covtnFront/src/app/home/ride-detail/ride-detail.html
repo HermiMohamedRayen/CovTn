@@ -1,0 +1,78 @@
+<div class="max-w-2xl mx-auto p-5 bg-white rounded-2xl shadow-lg border border-gray-100">
+
+    <!-- DRIVER HEADER -->
+    <div class="flex items-center gap-4 pb-4 border-b" (click)="viewDriverDetail()" *ngIf="ride()?.driver?.email" >
+        <img *ngIf="ride()?.driver?.photoUrl" [src]="ride().driver.photoUrl" alt="Driver photo"
+            class="w-20 h-20 rounded-full object-cover border shadow-sm" />
+
+        <div class="flex flex-col">
+            <span class="text-xl font-semibold">{{ ride()?.driver?.firstName }} {{ ride()?.driver?.lastName }}</span>
+        </div>
+    </div>
+
+    <!-- TRIP INFO -->
+    <div class="mt-5 space-y-4">
+        <div>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+
+                <div class="flex flex-col bg-gray-50 p-3 rounded-lg">
+                    <span class="font-medium"><i class="bi bi-pin-fill" style="color: red;"></i> Departure</span>
+                    <span class="text-gray-600">
+                        {{depart()}}
+                    </span>
+                </div>
+
+                <div class="flex flex-col bg-gray-50 p-3 rounded-lg">
+                    <span class="font-medium"><i class="bi bi-pin-fill" style="color: blue;"></i> Destination</span>
+                    <span class="text-gray-600">
+                        {{dest()}}
+                    </span>
+                </div>
+
+                <div class="flex flex-col bg-gray-50 p-3 rounded-lg">
+                    <span class="font-medium"><i class="bi bi-clock" style="color: red;"></i> Departs</span>
+                    <span class="text-gray-600">{{ ride()?.departureTime | date:'yyyy-MM-dd HH:mm' }}</span>
+                </div>
+
+                <div class="flex flex-col bg-gray-50 p-3 rounded-lg">
+                    <span class="font-medium"><i class="bi bi-clock" style="color: blue;"></i> Arrives</span>
+                    <span class="text-gray-600">{{ ride()?.arrivalTime | date:'yyyy-MM-dd HH:mm' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div
+      class="p-3 rounded-xl text-center"
+      [ngClass]="ride()?.approved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+    >
+      {{ ride()?.approved ? '✔ Approved Ride' : '⛔ Waiting for Approval' }}
+    </div>
+
+        <!-- MAP SECTION -->
+        <div class="mt-4">
+            <h3 class="text-lg font-semibold mb-2">Map</h3>
+            <div id="map-container" class="w-full h-72 rounded-xl border border-gray-300 bg-gray-100 shadow-inner">
+                <div id="map" class="w-full h-full rounded-xl"></div>
+            </div>
+        </div>
+
+        <div class="w-full bg-white rounded-2xl shadow-md border p-4 space-y-3 max-h-80 overflow-y-auto">
+            <h3 class="text-lg font-semibold mb-2">Comments 💬</h3>
+
+            <!-- Example comment -->
+            <div class="p-3 rounded-xl bg-gray-50 border">
+                <div class="flex items-center gap-2 mb-1">
+                    <img src="https://via.placeholder.com/40" class="w-8 h-8 rounded-full border" />
+                    <span class="font-medium">User Name</span>
+                </div>
+                <p class="text-gray-700 text-sm">
+                    This is a comment example text...
+                </p>
+            </div>
+
+            <!-- Repeat comment blocks dynamically here -->
+        </div>
+
+
+    </div>
+</div>

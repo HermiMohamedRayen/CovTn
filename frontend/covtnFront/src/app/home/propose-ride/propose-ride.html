@@ -1,0 +1,54 @@
+<div class="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
+  <h2 class="text-2xl font-semibold mb-5 text-center">Propose a Ride </h2>
+
+  <form [formGroup]="form" class="space-y-4" (ngSubmit)="onSubmit(depmap, destmap)">
+
+    <!-- Departure section -->
+    <h3 class="text-lg font-medium mt-4">📍 Departure</h3>
+    <div class="mt-4">
+            <div id="map-container" class="w-full h-72 rounded-xl border-2 border-gray-300 bg-gray-100 shadow-inner mt-2" #depmap> 
+                <div id="mapdep" class="w-full h-full rounded-xl"></div>
+            </div>
+            <small class="text-gray-500">Click on the map to select departure location.</small>
+        </div>
+
+    <!-- Destination -->
+    <h3 class="text-lg font-medium">🎯 Destination</h3>
+    <div class="mt-4">
+            <div id="map-container" class="w-full h-72 rounded-xl border-2 border-gray-300 bg-gray-100 shadow-inner mt-2 " #destmap>
+                <div id="mapdest" class="w-full h-full rounded-xl"></div>
+            </div>
+            <small class="text-gray-500">Click on the map to select destination location.</small>
+      
+    </div>
+
+    <!-- Times -->
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label>🕒 Departure Time</label>
+        <input type="datetime-local" class="input"
+               formControlName="departureTime"
+               #depTimeInput
+                 />
+      </div>
+      <div>
+        <label>🕓 Arrival Time</label>
+        <input type="datetime-local" 
+                class="input"
+               formControlName="arrivalTime" [min]="form.value.departureTime" 
+               [disabled]=" depTimeInput.value === '' "
+               />
+      </div>
+    </div>
+
+    
+
+    <!-- Submit -->
+    <button
+      class="w-full py-3 rounded-xl text-white font-medium
+             bg-green-600 hover:bg-green-700 transition"
+      type="submit">
+      Submit Ride
+    </button>
+  </form>
+</div>

@@ -1,0 +1,94 @@
+<div class="profile-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <button class="back-button" (click)="previousPage()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h1>Profile</h1>
+      <div class="spacer"></div>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="avatar" *ngIf="noimg == -1"> 
+          <i class="spinner"></i>
+        </div>
+      
+      
+     
+
+      <div class="avatar" *ngIf="noimg == 0" (click)="updateimg()">
+        <i class="bi bi-person"></i>
+      </div>
+        <img [src]="imgUrl" alt="Profile Image" class="avatar" (click)="updateimg()" *ngIf="noimg == 1" />
+
+    
+      <h2>{{ user().firstName }} {{ user().lastName }}</h2>
+      <p>{{ user().email }}</p>
+      
+      @if (apiService.hasRole("ROLE_DRIVER")){<div class="rating">
+        <i class="bi bi-star"></i>
+        <span>N/A</span>
+      </div>}
+    </div>
+
+    <!-- Contact Info -->
+    <div class="info-card">
+      <h3>Contact Information</h3>
+      <div class="contact-list">
+        <div class="contact-item">
+          <div class="icon-container">
+            <i class="bi bi-telephone"></i>
+          </div>
+          <span (dblclick)="updatePhoneNumber()">{{ user().number || 'N/A' }}</span>
+          <small>Double-click to update</small>
+        </div>
+
+        <div class="contact-item">
+          <div class="icon-container">
+            <i class="bi bi-envelope-at-fill"></i>
+          </div>
+          <span>{{ user().email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="info-card">
+      <h3>Settings</h3>
+
+      <!-- Dark Theme -->
+      <div class="setting-item" *ngIf="user().car" (click)="viewCar()">
+        <div class="setting-info">
+          <div class="icon-container">
+            <i class="bi bi-car-front"></i>
+          </div>
+            <span>My car</span>
+            
+        </div>
+       
+      </div>
+      <div class="setting-item" *ngIf="user().rides && user().rides.length > 0" routerLink="/my-rides">
+        <div class="setting-info">
+          <div class="icon-container">
+            <i class="bi bi-car-front"></i>
+          </div>
+            <span>My rides</span>
+            
+        </div>
+       
+      </div>
+
+
+    </div>
+
+    <!-- Logout Button -->
+    <button mat-button class="logout-button" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</div>

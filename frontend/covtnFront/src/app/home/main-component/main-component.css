@@ -1,0 +1,123 @@
+main{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.search-btn {
+    background-color: #38d24d;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    width: 250px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.search-btn i {
+    font-size: 24px;
+
+}
+
+/* --- New styles for search form and latest rides --- */
+.main-content {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    box-sizing: border-box;
+}
+
+.search-section {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 8px;
+}
+
+.search-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #0f172a;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.search-btn:hover {
+    background-color: #2bb33c;
+    transform: scale(1.05);
+}
+
+.latest-rides {
+    width: 100%;
+}
+
+.latest-rides > h3 {
+    margin: 8px 0 12px 4px;
+    font-size: 18px;
+    color: #0f172a;
+}
+
+.rides-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.ride-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(2,6,23,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.ride-action {
+    margin-top: 6px;
+    align-self: flex-start;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid #38d24d;
+    color: #0f172a;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.no-rides {
+    color: #6b7280;
+    padding: 12px;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap; /* added line */
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+    .rides-list { grid-template-columns: 1fr; }
+    .search-row { flex-direction: column; align-items: stretch; }
+    .search-btn { width: 100%; }
+}
