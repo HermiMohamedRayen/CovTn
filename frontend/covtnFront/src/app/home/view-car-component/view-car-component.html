@@ -1,53 +1,222 @@
-<div class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5">
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5 animate-fade-in">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="text-2xl font-semibold">
-      🚘 {{ car()?.model }}
-    </h2>
-    <span class="text-gray-500">#{{ car()?.matriculationNumber }}</span>
+  <!-- Messages -->
+  <div *ngIf="successMessage()" class="mb-4 p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-green-700 animate-slide-down flex items-center gap-2">
+    <i class="bi bi-check-circle"></i>
+    {{ successMessage() }}
+  </div>
+  
+  <div *ngIf="errorMessage()" class="mb-4 p-4 rounded-lg bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-700 animate-slide-down flex items-center gap-2">
+    <i class="bi bi-exclamation-circle"></i>
+    {{ errorMessage() }}
   </div>
 
-  <!-- Photo Gallery -->
-  <div *ngIf="car()?.photos?.length > 0" class="grid grid-cols-3 gap-3 rounded-xl overflow-hidden mb-5">
-    <div *ngFor="let img of car().photos, let i = index" class="relative">
-      <img
-        [src]="car().photosUrl[i]"
-        class="w-full h-28 object-cover rounded-lg border bg-gray-100"
-      />
+  <!-- Header with Edit Button -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        🚘 {{ editMode() ? 'Edit Car Details' : car()?.model }}
+      </h2>
+      <p class="text-gray-500 text-sm mt-1" *ngIf="!editMode()">Last updated: {{ car()?.updatedAt | date:'mediumDate' }}</p>
+    </div>
+    <button 
+      (click)="toggleEditMode()" 
+      class="px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2"
+      [ngClass]="editMode() ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-blue-500 text-white hover:bg-blue-600'">
+      <i [class]="editMode() ? 'bi bi-x-lg' : 'bi bi-pencil'"></i>
+      {{ editMode() ? 'Cancel' : 'Edit' }}
+    </button>
+  </div>
+
+  <!-- View Mode -->
+  <div *ngIf="!editMode()" class="animate-slide-up">
+    <!-- Photo Gallery -->
+    <div *ngIf="car()?.photosUrl?.length > 0" class="grid grid-cols-3 gap-3 rounded-xl overflow-hidden mb-5">
+      <div *ngFor="let img of car()?.photosUrl, let i = index" class="relative group">
+        <img
+          [src]="img"
+          class="w-full h-28 object-cover rounded-lg border bg-gray-100 transition-transform duration-300 group-hover:scale-110"
+        />
+      </div>
+    </div>
+
+    <!-- Car Info -->
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl mb-5 border border-blue-100">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm">Matriculation</span>
+          <span class="font-semibold">{{ car()?.matriculationNumber }}</span>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm">Seats</span>
+          <span class="font-semibold">{{ car()?.seats }} 👥</span>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm">Air Conditioner</span>
+          <span class="font-semibold">{{ car()?.airConditioner ? 'Yes ❄️' : 'No' }}</span>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="text-gray-500 text-sm">Smoker Allowed</span>
+          <span class="font-semibold">{{ car()?.smoker ? 'Yes 🚬' : 'No' }}</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Car() Info -->
-  <div class="bg-gray-50 p-4 rounded-xl mb-5">
-    <div class="grid grid-cols-2 gap-4">
+  <!-- Edit Mode -->
+  <div *ngIf="editMode()" class="animate-slide-up">
+    <form [formGroup]="editForm" class="space-y-6">
+      <!-- Photo Gallery with Edit -->
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-images text-blue-600"></i> Photos
+          </h3>
+          <span class="text-sm font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+            {{ getPhotoCount() }}/5
+          </span>
+        </div>
 
-       
+        <!-- Photos Grid -->
+        <div class="grid grid-cols-3 gap-3 mb-4" *ngIf="(car()?.photosUrl?.length || 0) > 0">
+          <div *ngFor="let img of (car()?.photosUrl || []), let i = index" class="relative group">
+            <img
+              [src]="img || ''"
+              alt="Car photo"
+              class="w-full h-28 object-cover rounded-lg border-2 border-blue-200 bg-gray-100 group-hover:border-red-300 transition-all"
+            />
+            <button 
+              type="button"
+              (click)="removePhoto(i)"
+              class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-600 hover:scale-110">
+              <i class="bi bi-trash text-sm"></i>
+            </button>
+          </div>
+        </div>
 
-      <div class="flex flex-col">
-        <span class="text-gray-500">Seats</span>
-        <span class="font-semibold">{{ car()?.seats }}</span>
+        <!-- New Photos Preview -->
+        <div class="grid grid-cols-3 gap-3 mb-4" *ngIf="newPhotosUrls.length > 0">
+          <div *ngFor="let img of newPhotosUrls, let i = index" class="relative group">
+            <img
+              [src]="img"
+              alt="New photo preview"
+              class="w-full h-28 object-cover rounded-lg border-2 border-green-300 bg-gray-100 group-hover:border-red-300 transition-all opacity-75"
+            />
+            <span class="absolute top-1 left-1 bg-green-500 text-white text-xs px-2 py-1 rounded">New</span>
+          </div>
+        </div>
+
+        <!-- Upload Area -->
+        <label class="block cursor-pointer" *ngIf="getPhotoCount() < 5">
+          <div class="px-6 py-4 bg-white border-2 border-blue-300 border-dashed rounded-lg hover:bg-blue-50 transition-all duration-300 text-center">
+            <i class="bi bi-cloud-upload text-2xl text-blue-500 mb-2 block"></i>
+            <p class="font-medium text-gray-700">Click to upload photos</p>
+            <p class="text-xs text-gray-500">or drag and drop</p>
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*"
+              (change)="addPhotos($event.target)"
+              class="hidden"
+            />
+          </div>
+        </label>
+        <div *ngIf="getPhotoCount() >= 5" class="px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm flex items-center gap-2">
+          <i class="bi bi-exclamation-triangle"></i>
+          Maximum photos reached (5/5)
+        </div>
       </div>
 
-      <div class="flex flex-col">
-        <span class="text-gray-500">Air Conditioner</span>
-        <span class="font-semibold">{{ car()?.airConditioner ? 'Yes ❄️' : 'No' }}</span>
+      <!-- Form Fields -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <i class="bi bi-info-circle text-indigo-600"></i> Car Information
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Matriculation Number -->
+          <div>
+            <label class="block text-sm font-semibold mb-2 text-gray-700">
+              Matriculation Number <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              formControlName="matriculationNumber"
+              placeholder="e.g. 123 TU 4567"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            />
+            <small *ngIf="editForm.get('matriculationNumber')?.hasError('minlength')" class="text-red-500 text-xs">
+              Minimum 3 characters required
+            </small>
+          </div>
+
+          <!-- Model -->
+          <div>
+            <label class="block text-sm font-semibold mb-2 text-gray-700">
+              Car Model <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              formControlName="model"
+              placeholder="e.g. Peugeot 208"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            />
+            <small *ngIf="editForm.get('model')?.hasError('minlength')" class="text-red-500 text-xs">
+              Minimum 2 characters required
+            </small>
+          </div>
+
+          <!-- Seats -->
+          <div>
+            <label class="block text-sm font-semibold mb-2 text-gray-700">
+              Number of Seats <span class="text-red-500">*</span>
+            </label>
+            <select 
+              formControlName="seats"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+              <option *ngFor="let i of [1,2,3,4,5,6,7,8,9]" [value]="i">{{ i }} Seat{{ i > 1 ? 's' : '' }} 👥</option>
+            </select>
+          </div>
+
+          <!-- Air Conditioner -->
+          <div>
+            <label class="block text-sm font-semibold mb-3 text-gray-700">Features</label>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  formControlName="airConditioner"
+                  class="w-5 h-5 rounded accent-blue-500 cursor-pointer"
+                />
+                <span class="text-gray-700 font-medium">Air Conditioner ❄️</span>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-all">
+                <input 
+                  type="checkbox" 
+                  formControlName="smoker"
+                  class="w-5 h-5 rounded accent-blue-500 cursor-pointer"
+                />
+                <span class="text-gray-700 font-medium">Smoker Allowed 🚬</span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="flex flex-col">
-        <span class="text-gray-500">Smoker Allowed</span>
-        <span class="font-semibold">{{ car()?.smoker ? 'Yes 🚬' : 'No' }}</span>
-      </div>
-
-    </div>
+      <!-- Save Button -->
+      <button 
+        type="button"
+        (click)="onSave()"
+        [disabled]="!editForm.valid || isSaving()"
+        class="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+        <i [class]="isSaving() ? 'bi bi-hourglass-split animate-spin' : 'bi bi-check-lg'"></i>
+        {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </form>
   </div>
-
-  <!-- Description 
-  <div>
-    <h3 class="font-semibold text-lg mb-2">Description</h3>
-    <p class="text-gray-700 whitespace-pre-line">
-      {{ car()?.description || 'No description provided.' }}
-    </p>
-  </div> -->
 
 </div>

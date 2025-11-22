@@ -1,7 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -13,6 +13,7 @@ import { MailVerifyComponent } from './mail-verify-component/mail-verify-compone
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ViewCarComponent } from './home/view-car-component/view-car-component';
 import { DriverViewDetail } from './home/driver-view-detail/driver-view-detail';
+import { HttpAuthInterceptor } from './http.interceptor';
 
 
 @NgModule({
@@ -33,7 +34,12 @@ import { DriverViewDetail } from './home/driver-view-detail/driver-view-detail';
     MatSlideToggleModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpAuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [App]
 })

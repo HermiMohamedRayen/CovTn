@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 })
 export class Sidebar {
   navLinks = [
-    { path: '/admin/entities', label: 'Gérer les Entités' },
-    // Ajoutez d'autres liens ici pour d'autres types d'entités si nécessaire
-    // { path: '/admin/users', label: 'Gérer les Utilisateurs' },
+    { path: '/admin/entities', label: 'Gérer les Utilisateurs' },
+    { path: '/admin/rides', label: 'Gérer les Rides' },
+    { path: '/admin/statistics', label: 'Statistiques' },
   ];
 
 }

@@ -1,0 +1,88 @@
+<div class="rides-container">
+  <div class="header">
+    <h2>Gestion des Rides</h2>
+  </div>
+
+  <div class="filter-buttons">
+    <button 
+      [class.active]="filter === 'all'" 
+      (click)="setFilter('all')"
+      class="filter-btn">
+      Tous les Rides
+    </button>
+    <button 
+      [class.active]="filter === 'approved'" 
+      (click)="setFilter('approved')"
+      class="filter-btn">
+      Approuvés
+    </button>
+    <button 
+      [class.active]="filter === 'pending'" 
+      (click)="setFilter('pending')"
+      class="filter-btn">
+      En attente
+    </button>
+    <button (click)="loadRides()" class="refresh-btn">Rafraîchir</button>
+  </div>
+
+  @if (error) {
+    <div class="error-message">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading">Chargement...</div>
+  } @else {
+    @if (filteredRides.length === 0) {
+      <div class="no-data">Aucun ride trouvé</div>
+    } @else {
+      <div class="rides-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Conducteur</th>
+              <th>Départ</th>
+              <th>Destination</th>
+              <th>Date Départ</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ride of filteredRides; track ride.id) {
+              <tr [class.pending]="!ride.approved" [class.approved]="ride.approved">
+                <td>{{ ride.id }}</td>
+                <td>{{ getDriverInfo(ride) }}</td>
+                <td>
+                  @if (ride.departure) {
+                    {{ ride.departure.latitude | number:'1.2-2' }}, {{ ride.departure.longitude | number:'1.2-2' }}
+                  }
+                </td>
+                <td>
+                  @if (ride.destination) {
+                    {{ ride.destination.latitude | number:'1.2-2' }}, {{ ride.destination.longitude | number:'1.2-2' }}
+                  }
+                </td>
+                <td>{{ formatDate(ride.departureTime) }}</td>
+                <td>
+                  <span [class]="ride.approved ? 'status-approved' : 'status-pending'">
+                    {{ ride.approved ? 'Approuvé' : 'En attente' }}
+                  </span>
+                </td>
+                <td class="actions">
+                  @if (!ride.approved) {
+                    <button class="btn-approve" (click)="approveRide(ride.id)">Approuver</button>
+                  }
+                  @if (ride.approved) {
+                    <button class="btn-reject" (click)="rejectRide(ride.id)">Rejeter</button>
+                  }
+                  <button class="btn-delete" (click)="deleteRide(ride.id)">Supprimer</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

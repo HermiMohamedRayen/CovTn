@@ -1,0 +1,114 @@
+<div class="statistics-container">
+  <div class="header">
+    <h2>Tableau de bord des statistiques</h2>
+    <button class="refresh-btn" (click)="loadStatistics()">
+      @if (loading) {
+        Chargement...
+      } @else {
+        Rafraîchir
+      }
+    </button>
+  </div>
+
+  @if (error) {
+    <div class="error-message">{{ error }}</div>
+  }
+
+  @if (statistics) {
+    <div class="stats-grid">
+      <!-- Rides Statistics -->
+      <div class="stat-card rides-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>Total des Rides</h3>
+          <div class="stat-value">{{ statistics.totalRides }}</div>
+          <div class="stat-detail">
+            <span class="approved">✓ Approuvés: {{ statistics.approvedRides }}</span>
+            <span class="pending">⏳ En attente: {{ statistics.pendingRides }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval Rate -->
+      <div class="stat-card approval-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-content">
+          <h3>Taux d'approbation</h3>
+          <div class="stat-value">{{ getApprovalPercentage() }}%</div>
+          <div class="progress-bar">
+            <div class="progress" [style.width.%]="getApprovalPercentage()"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Statistics -->
+      <div class="stat-card users-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>Utilisateurs</h3>
+          <div class="stat-value">{{ statistics.totalUsers }}</div>
+          <div class="stat-detail">
+            <span class="drivers">🚗 Conducteurs: {{ statistics.totalDrivers }}</span>
+            <span class="passengers">👤 Passagers: {{ getPassengersCount() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drivers Statistics -->
+      <div class="stat-card drivers-card">
+        <div class="stat-icon">🚗</div>
+        <div class="stat-content">
+          <h3>Conducteurs</h3>
+          <div class="stat-value">{{ statistics.totalDrivers }}</div>
+          <div class="stat-detail">
+            <p>Pourcentage des utilisateurs</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Rides -->
+      <div class="stat-card pending-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-content">
+          <h3>Rides en attente</h3>
+          <div class="stat-value">{{ statistics.pendingRides }}</div>
+          <div class="stat-detail">
+            <p>À approuver ou rejeter</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approved Rides -->
+      <div class="stat-card approved-card">
+        <div class="stat-icon">✓</div>
+        <div class="stat-content">
+          <h3>Rides approuvés</h3>
+          <div class="stat-value">{{ statistics.approvedRides }}</div>
+          <div class="stat-detail">
+            <p>Prêts à être partagés</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <h3>Résumé</h3>
+      <ul>
+        <li>Nombre total de rides: <strong>{{ statistics.totalRides }}</strong></li>
+        <li>Rides approuvés: <strong>{{ statistics.approvedRides }}</strong></li>
+        <li>Rides en attente: <strong>{{ statistics.pendingRides }}</strong></li>
+        <li>Nombre total d'utilisateurs: <strong>{{ statistics.totalUsers }}</strong></li>
+        <li>Nombre de conducteurs: <strong>{{ statistics.totalDrivers }}</strong></li>
+        <li>Nombre de passagers: <strong>{{ getPassengersCount() }}</strong></li>
+      </ul>
+    </div>
+  } @else if (!loading) {
+    <div class="no-data">Aucune donnée disponible</div>
+  } @else {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement des statistiques...</p>
+    </div>
+  }
+</div>
