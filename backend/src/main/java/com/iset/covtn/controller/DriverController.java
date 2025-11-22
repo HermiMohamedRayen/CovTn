@@ -81,6 +81,75 @@ class DriverController {
 
     }
 
+    @GetMapping("/car")
+    public ResponseEntity<?> getCurrentUserCar(
+            @RequestHeader("Authorization") String token
+    ) {
+        token = token.substring(7);
+        String email = jwtService.extractUsername(token);
+        UserInfo user = userInfoService.findByEmail(email);
+        
+        if (user == null || user.getCar() == null) {
+            return ResponseEntity.status(404).body("Car not found");
+        }
+
+        return ResponseEntity.ok(user.getCar());
+    }
+
+    @GetMapping("/car/{carId}")
+    public ResponseEntity<?> getCar(
+            @RequestHeader("Authorization") String token,
+            @PathVariable long carId
+    ) {
+        token = token.substring(7);
+        String email = jwtService.extractUsername(token);
+        UserInfo user = userInfoService.findByEmail(email);
+        
+        if (user == null || user.getCar() == null || user.getCar().getId() != carId) {
+            return ResponseEntity.status(403).body("Unauthorized to access this car");
+        }
+
+        return ResponseEntity.ok(user.getCar());
+    }
+
+    @PutMapping("/car/{carId}")
+    public ResponseEntity<?> updateCar(
+            @RequestHeader("Authorization") String token,
+            @PathVariable long carId,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @RequestPart("car") Car car
+    ) {
+        token = token.substring(7);
+        String email = jwtService.extractUsername(token);
+        UserInfo user = userInfoService.findByEmail(email);
+        
+        if (user == null || user.getCar() == null || user.getCar().getId() != carId) {
+            return ResponseEntity.status(403).body("Unauthorized to update this car");
+        }
+
+        Car existingCar = user.getCar();
+        existingCar.setMatriculationNumber(car.getMatriculationNumber());
+        existingCar.setModel(car.getModel());
+        existingCar.setSeats(car.getSeats());
+        existingCar.setAirConditioner(car.isAirConditioner());
+        existingCar.setSmoker(car.isSmoker());
+
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                String name = fileSystemStorageService.store(file);
+                existingCar.getPhotos().add(name);
+            }
+        }
+
+        if (car.getPhotosToRemove() != null && !car.getPhotosToRemove().isEmpty()) {
+            existingCar.getPhotos().removeAll(car.getPhotosToRemove());
+        }
+
+        userInfoService.setCar(existingCar, email);
+
+        return ResponseEntity.ok().build();
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex)
     {

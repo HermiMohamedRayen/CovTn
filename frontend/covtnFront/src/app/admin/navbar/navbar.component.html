@@ -1,0 +1,83 @@
+<nav class="admin-navbar">
+  <div class="navbar-container">
+    <!-- Logo/Brand -->
+    <div class="navbar-brand" (click)="navigateTo('/admin/dashboard')">
+      <i class="bi bi-car-front"></i>
+      <span>CovTN Admin</span>
+    </div>
+
+    <!-- Desktop Menu -->
+    <ul class="navbar-menu desktop-menu">
+      <li><a (click)="navigateTo('/admin/dashboard')" class="nav-link" [class.active]="isActive('/admin/dashboard')">
+          <i class="bi bi-speedometer2"></i> Tableau de bord
+        </a></li>
+      <li><a (click)="navigateTo('/admin/entities')" class="nav-link" [class.active]="isActive('/admin/entities')">
+          <i class="bi bi-people"></i> Utilisateurs
+        </a></li>
+      <li><a (click)="navigateTo('/admin/drivers')" class="nav-link" [class.active]="isActive('/admin/drivers')">
+          <i class="bi bi-person-badge"></i> Chauffeurs
+        </a></li>
+      <li><a (click)="navigateTo('/admin/vehicles')" class="nav-link" [class.active]="isActive('/admin/vehicles')">
+          <i class="bi bi-truck"></i> Véhicules
+        </a></li>
+      <li><a (click)="navigateTo('/admin/rides')" class="nav-link" [class.active]="isActive('/admin/rides')">
+          <i class="bi bi-geo-alt"></i> Trajets
+        </a></li>
+      <li><a (click)="navigateTo('/admin/statistics')" class="nav-link" [class.active]="isActive('/admin/statistics')">
+          <i class="bi bi-bar-chart"></i> Statistiques
+        </a></li>
+    </ul>
+
+    <!-- User Menu -->
+    <div class="navbar-user">
+      <div class="user-info" (click)="toggleUserMenu($event)">
+        <div class="avatar">
+          {{ user()?.firstName?.charAt(0) }}{{ user()?.lastName?.charAt(0) }}
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+          <span class="user-role">Administrateur</span>
+        </div>
+      </div>
+      <div class="dropdown" [class.show]="userMenuOpen">
+        <div class="dropdown-menu">
+          <a (click)="navigateTo('/profile')" class="dropdown-item">
+            <i class="bi bi-person"></i> Mon Profil
+          </a>
+          <a (click)="navigateTo('/settings')" class="dropdown-item">
+            <i class="bi bi-gear"></i> Paramètres
+          </a>
+          <div class="dropdown-divider"></div>
+          <a (click)="navigateTo('/help')" class="dropdown-item">
+            <i class="bi bi-question-circle"></i> Aide & Support
+          </a>
+          <div class="dropdown-divider"></div>
+          <a (click)="logout()" class="dropdown-item text-danger">
+            <i class="bi bi-box-arrow-right"></i> Déconnexion
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" (click)="toggleMobileMenu()" [class.active]="mobileMenuOpen">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu-overlay" [class.active]="mobileMenuOpen" (click)="toggleMobileMenu()"></div>
+  <div class="mobile-menu-container" [class.active]="mobileMenuOpen">
+    <ul class="mobile-menu">
+      <li><a (click)="navigateTo('/admin/dashboard')" class="nav-link">Dashboard</a></li>
+      <li><a (click)="navigateTo('/admin/entities')" class="nav-link">Utilisateurs</a></li>
+      <li><a (click)="navigateTo('/admin/rides')" class="nav-link">Trajets</a></li>
+      <li><a (click)="navigateTo('/admin/statistics')" class="nav-link">Statistiques</a></li>
+      <li><hr class="divider" /></li>
+      <li><a (click)="navigateTo('/profile')" class="nav-link">Profil</a></li>
+      <li><a (click)="logout()" class="nav-link logout">Déconnexion</a></li>
+    </ul>
+  </div>
+</nav>

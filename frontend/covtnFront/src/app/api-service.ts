@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,20 @@ export class ApiService {
         console.error('Error refreshing token:', err);
       }
     });
+  }
+
+  refreshTokenAsync(): Observable<string> {
+    const token = this.loadToken();
+    return this.http.get<string>(`${this.apiUrl}/auth/refreshToken`, {
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: 'text' as 'json'
+    }).pipe(
+      switchMap((newToken) => {
+        console.log('Token refreshed successfully');
+        this.setToken(newToken.toString());
+        return [newToken.toString()];
+      })
+    );
   }
   logout() {
     localStorage.clear();
@@ -245,5 +260,39 @@ export class ApiService {
       })
   }
 
+  updateCar(carId: number, car: any): Observable<any> {
+    const files = car.photos?.filter((p: any) => p instanceof File) || [];
+    const c = { ...car };
+    c.photos = car.photos?.filter((p: any) => !(p instanceof File)) || [];
+    
+    const formData = new FormData();
+    formData.append('car', new Blob([JSON.stringify(c)], { type: 'application/json' }));
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+    return this.http.put(`${this.apiUrl}/driver/car/${carId}`, formData, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      },
+      responseType: 'text'
+    });
+  }
+
+  getComments(rideId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/ride/${rideId}/comments`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  }
+
+  addComment(rideId: number, comment: { text: string, rating: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/ride/${rideId}/comment`, comment, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      },
+      responseType: 'text'
+    });
+  }
 
 }

@@ -1,70 +1,165 @@
+@keyframes slideInForm {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes inputFocus {
+    from {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+    }
+    to {
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+}
+
+@keyframes shimmerInput {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
 .main{
     display: flex;
     flex-direction: column;
-    width: fit-content;
     width: 100%;
+    animation: slideInForm 0.6s ease-out;
 }
+
 .main > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
+    margin-top: 16px;
     width: 100%;
+    animation: slideInForm 0.6s ease-out backwards;
 }
+
+.main > div:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.main > div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.main > div:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
 .inp{
-    border-style: solid;
+    border: 2px solid #e0e0e0;
     max-width: 260px;
-    padding: 4px;
-    border-radius: 20px;
-    border-color: gray;
+    padding: 12px 16px;
+    border-radius: 12px;
     outline: none;
     width: 100%;
-    
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: #f8f9fa;
+    font-family: inherit;
 }
+
 .inp:focus{
-    border-color: black;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
 }
+
+.inp::placeholder {
+    color: #999;
+}
+
 label{
     text-transform: capitalize;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 8px;
 }
+
 button{
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 12px 32px;
+    border-radius: 12px;
     border: none;
-    background-color: rgb(38, 196, 40);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     cursor: pointer;
-    margin:  auto;
-    margin-top: 10px;
-    
+    margin: auto;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    letter-spacing: 0.5px;
 }
+
+button:hover:not(:disabled){
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+button:active:not(:disabled){
+    transform: translateY(-1px);
+}
+
 button:disabled{
-    background-color: white;
-    color: gray;
-    border: 1px solid gray;
+    background: linear-gradient(135deg, #ccc 0%, #999 100%);
+    color: #666;
+    border: none;
     cursor: not-allowed;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ng-invalid.ng-touched {
-    border-color: red !important;
+    border-color: #e74c3c !important;
+    animation: wiggle 0.4s ease-in-out;
 }
+
+@keyframes wiggle {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
 .ng-valid.ng-touched{
-    border-color: green !important;
+    border-color: #48bb78 !important;
 }
 
 h1{
     text-align: center;
-    font-weight: normal;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 32px;
+    font-size: 2rem;
+    animation: slideInForm 0.6s ease-out;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 @media (max-width: 450px) {
     .main > div {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
     }
     .inp{
         max-width: unset;
-        margin-top: 4px;
+        margin-top: 0;
     }
-    
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+    }
 }

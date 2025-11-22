@@ -4,6 +4,7 @@ import { MapService } from '../../map-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ApiService } from '../../api-service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-ride-detail',
@@ -14,6 +15,8 @@ import { ApiService } from '../../api-service';
 export class RideDetail implements OnInit{
 
   protected ride = signal({} as any);
+  protected comments = signal<any[]>([]);
+  commentForm: FormGroup;
 
   map : L.Map = null!! ;
   private isinit: boolean = false;
@@ -24,8 +27,13 @@ export class RideDetail implements OnInit{
   constructor(private mapService: MapService,
     private router : Router,private location: Location,
      private apiService: ApiService,
-     private route: ActivatedRoute
+     private route: ActivatedRoute,
+     private fb: FormBuilder
     ) {
+    this.commentForm = this.fb.group({
+      text: ['', [Validators.required, Validators.minLength(5)]],
+      rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]]
+    });
     const extra = this.router.currentNavigation()?.extras.state;
     if (extra && extra['ride']) {
       this.ride.set(extra['ride']);
@@ -89,7 +97,7 @@ export class RideDetail implements OnInit{
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(this.map);
     this.isinit = true;
-
+    this.loadComments();
   }
 
 
@@ -122,6 +130,47 @@ export class RideDetail implements OnInit{
       }
     };
     this.router.navigate(['/driver-view-detail'], navigationExtras);
+  }
+
+  loadComments(): void {
+    if (this.ride()?.id) {
+      this.apiService.getComments(this.ride().id).subscribe({
+        next: (data) => {
+          this.comments.set(data || []);
+        },
+        error: (error) => {
+          console.error("Error loading comments:", error);
+          this.comments.set([]);
+        }
+      });
+    }
+  }
+
+  submitComment(): void {
+    if (this.commentForm.valid && this.ride()?.id) {
+      if (!this.commentForm.get('text')?.value?.trim()) {
+        alert('Please enter a comment');
+        return;
+      }
+      
+      this.apiService.addComment(this.ride().id, this.commentForm.value).subscribe({
+        next: (response) => {
+          console.log('Comment added successfully', response);
+          this.commentForm.reset({ text: '', rating: 5 });
+          this.loadComments();
+        },
+        error: (error) => {
+          console.error('Error adding comment', error);
+          alert('Failed to add comment. Please try again.');
+        }
+      });
+    }
+  }
+
+  getAverageRating(): number {
+    if (this.comments().length === 0) return 0;
+    const sum = this.comments().reduce((acc, comment) => acc + (comment.rating || 0), 0);
+    return Math.round((sum / this.comments().length) * 10) / 10;
   }
 
 }

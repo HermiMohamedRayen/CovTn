@@ -28,6 +28,9 @@ public class Car {
     private boolean smoker;
     private int seats;
 
+    @Transient
+    private ArrayList<String> photosToRemove;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @OneToOne(fetch = FetchType.EAGER,mappedBy = "car")
     private UserInfo user;

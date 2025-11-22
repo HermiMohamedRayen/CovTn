@@ -1,39 +1,70 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 .ride-title {
     margin: 0;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     color: #0f172a;
+    margin-bottom: 8px;
+    animation: fadeIn 0.6s ease-out;
 }
 
 .ride-meta {
-    margin: 0;
+    margin: 8px 0;
     font-size: 13px;
-    color: #475569;
+    color: #667eea;
     display: flex;
     justify-content: space-between;
+    animation: fadeIn 0.6s ease-out 0.1s both;
+    font-weight: 600;
 }
 
 .ride-desc {
-    margin: 0;
+    margin: 8px 0;
     font-size: 13px;
     color: #6b7280;
+    line-height: 1.5;
+    animation: fadeIn 0.6s ease-out 0.2s both;
 }
+
 .ride-center {
     text-align: center;
 }
 
 .ride-action {
-    margin-top: 6px;
+    margin-top: 12px;
     align-self: center;
-    padding: 6px 10px;
-    background: transparent;
-    border: 1px solid #38d24d;
-    color: #0f172a;
-    border-radius: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    animation: fadeIn 0.6s ease-out 0.3s both;
 }
+
+.ride-action:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+}
+
+.ride-action:active:not(:disabled) {
+    transform: translateY(0);
+}
+
 button[disabled].ride-action {
     opacity: 0.6;
     cursor: not-allowed;
+    background: linear-gradient(135deg, #ccc 0%, #999 100%);
 }
