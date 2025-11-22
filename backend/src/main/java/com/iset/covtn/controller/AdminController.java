@@ -1,6 +1,8 @@
 package com.iset.covtn.controller;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.UserInfo;
+import com.iset.covtn.models.Ride;
 import com.iset.covtn.service.UserInfoService;
+import com.iset.covtn.service.RideService;
 
 
 @RestController
@@ -25,6 +29,9 @@ public class AdminController {
 
     @Autowired
     private UserInfoService userService;
+
+    @Autowired
+    private RideService rideService;
 
      /**
      * Liste de tous les utilisateurs (admin uniquement)
@@ -112,6 +119,70 @@ public class AdminController {
     public ResponseEntity<String> deletePassenger(@PathVariable String email) {
         return ResponseEntity.ok(userService.deletePassenger(email));
     }
-    
+
+    @GetMapping("/rides")
+    public ResponseEntity<List<Ride>> getAllRides() {
+        return ResponseEntity.ok(rideService.getAllRides());
+    }
+
+    @GetMapping("/rides/approved")
+    public ResponseEntity<List<Ride>> getApprovedRides() {
+        return ResponseEntity.ok(rideService.getApprovedRides());
+    }
+
+    @GetMapping("/rides/pending")
+    public ResponseEntity<List<Ride>> getPendingRides() {
+        return ResponseEntity.ok(rideService.getPendingRides());
+    }
+
+    @GetMapping("/rides/{id}")
+    public ResponseEntity<Ride> getRideById(@PathVariable Long id) {
+        return rideService.getRideById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/rides/{id}/approve")
+    public ResponseEntity<Ride> approveRide(@PathVariable Long id) {
+        try {
+            Ride ride = rideService.approveRide(id);
+            return ResponseEntity.ok(ride);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/rides/{id}/reject")
+    public ResponseEntity<Ride> rejectRide(@PathVariable Long id) {
+        try {
+            Ride ride = rideService.rejectRide(id);
+            return ResponseEntity.ok(ride);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/rides/{id}")
+    public ResponseEntity<String> deleteRide(@PathVariable Long id) {
+        try {
+            rideService.deleteRide(id);
+            return ResponseEntity.ok("Ride deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Ride not found with id: " + id);
+        }
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Long>> getStatistics() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalRides", rideService.getTotalRidesCount());
+        stats.put("approvedRides", rideService.getApprovedRidesCount());
+        stats.put("pendingRides", rideService.getPendingRidesCount());
+        stats.put("totalUsers", (long) userService.getAllUsers().size());
+        stats.put("totalDrivers", (long) userService.getAllDrivers().size());
+        stats.put("totalPassengers", (long) userService.getAllPassengers().size());
+        return ResponseEntity.ok(stats);
+    }
 
 }
