@@ -13,7 +13,6 @@ import { MailVerifyComponent } from './mail-verify-component/mail-verify-compone
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ViewCarComponent } from './home/view-car-component/view-car-component';
 import { DriverViewDetail } from './home/driver-view-detail/driver-view-detail';
-import { HttpAuthInterceptor } from './http.interceptor';
 
 
 @NgModule({
@@ -35,11 +34,7 @@ import { HttpAuthInterceptor } from './http.interceptor';
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpAuthInterceptor,
-      multi: true
-    }
+    
   ],
   bootstrap: [App]
 })
