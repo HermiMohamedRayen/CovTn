@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { MapService } from '../../map-service';
 import { NavigationExtras, Router } from '@angular/router';
+import { firstValueFrom, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-ride-item',
@@ -21,19 +22,25 @@ export class RideItem implements OnInit{
 
   async ngOnInit() {
     this.ride_item.set(this.ride);
-      const adress : any = await this.mapService.reverseGeocode(this.ride.departure.latitude, this.ride.departure.longitude).toPromise();
- 
-        this.ride_item.update((ride) => {
-          return {...ride, from: adress.address.suburb || adress.address.county || adress.address.city_district, fromAddress: adress.display_name};
-        });
-      
-      const adress2 : any = await this.mapService.reverseGeocode(this.ride.destination.latitude, this.ride.destination.longitude).toPromise();
- 
-        this.ride_item.update((ride) => {
-          console.log(adress2);
-          return {...ride, to: adress2.address.suburb || adress2.address.county || adress2.address.city_district, toAddress: adress2.display_name};
-        });
+
+    const depReq = this.mapService.reverseGeocode(this.ride.departure.latitude, this.ride.departure.longitude);
+    const destReq = this.mapService.reverseGeocode(this.ride.destination.latitude, this.ride.destination.longitude);
+
+    try {
+      const [depAddress, destAddress]: any[] = await firstValueFrom(forkJoin([depReq, destReq]));
+
+      this.ride_item.update((ride) => ({
+        ...ride,
+        from: depAddress.address.suburb || depAddress.address.county || depAddress.address.city_district,
+        fromAddress: depAddress.display_name,
+        to: destAddress.address.suburb || destAddress.address.county || destAddress.address.city_district,
+        toAddress: destAddress.display_name
+      }));
+    } catch (err) {
+      console.error('Error during reverse geocoding:', err);
+    } finally {
       this.loading = false;
+    }
   }
   viewRide(): void {
     const navigationExtras : NavigationExtras = {
