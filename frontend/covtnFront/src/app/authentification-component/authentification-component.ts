@@ -71,7 +71,10 @@ export class AuthentificationComponent {
     this.apiService.signUp($event).subscribe({
       next: (response) => {
         alert('Registration successful! You can now log in.');
-        this.perm();
+        const val = JSON.parse(response.toString());
+        const toVerify : NavigationExtras = {state: { elem: val } };
+        this.router.navigate(['/mail-verify'], toVerify);
+        App.loading.set(false);
       },
       error: (error) => {
         alert('Registration failed. Please try again.');
