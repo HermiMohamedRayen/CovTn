@@ -22,7 +22,7 @@
      
 
       <div class="avatar" *ngIf="noimg == 0" (click)="updateimg()">
-        <mat-icon>person</mat-icon>
+        <i class="person-icon bi bi-person"></i>
       </div>
         <img [src]="imgUrl" alt="Profile Image" class="avatar" (click)="updateimg()" *ngIf="noimg == 1" />
 
