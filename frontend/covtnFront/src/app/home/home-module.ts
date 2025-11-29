@@ -17,6 +17,12 @@ import { MyRidesComponent } from './my-rides-component/my-rides-component';
 import { ViewCarComponent } from './view-car-component/view-car-component';
 import { DriverViewDetail } from './driver-view-detail/driver-view-detail';
 import { RideItem } from './ride-item/ride-item';
+import { MyParticipationComponent } from './my-participation-component/my-participation-component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { ParticipantsDialog } from './my-rides-component/participants-dialog/participants-dialog';
+import { NotificationDialog } from './notification-dialog/notification-dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -35,7 +41,10 @@ import { RideItem } from './ride-item/ride-item';
     MyRidesComponent,
     ViewCarComponent,
     DriverViewDetail,
-    RideItem
+    RideItem,
+    MyParticipationComponent,
+    ParticipantsDialog,
+    NotificationDialog
 
     
   ],
@@ -44,7 +53,10 @@ import { RideItem } from './ride-item/ride-item';
     ReactiveFormsModule,
     HttpClientModule,
     MatSlideToggleModule,
-    CommonModule
+    CommonModule,
+    MatDialogModule,
+    MatListModule,
+    MatIconModule
   ]
 })
 export class HomeModule { }

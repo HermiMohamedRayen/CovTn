@@ -1,0 +1,23 @@
+<h2 mat-dialog-title class="text-xl font-bold mb-4">Participants</h2>
+<mat-dialog-content class="max-h-96 overflow-y-auto">
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let participant of data.participants" class="mb-2">
+      <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+         <img [src]=" 'https://ui-avatars.com/api/?name=' + participant.rider.firstName + '+' + participant.rider.lastName + '&background=random'" 
+              alt="{{ participant.rider.firstName }}" 
+              class="w-10 h-10 rounded-full object-cover border border-gray-200">
+         <div class="flex flex-col">
+             <span class="font-medium text-gray-800">{{ participant.rider.firstName }} {{ participant.rider.lastName }}</span>
+             <span class="text-xs text-gray-500">{{ participant.rider.email }}</span>
+         </div>
+      </div>
+    </mat-list-item>
+    <div *ngIf="!data.participants || data.participants.length === 0" class="text-center py-4 text-gray-500">
+        <i class="bi bi-people text-2xl mb-2 block"></i>
+        No participants yet.
+    </div>
+  </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="mt-4">
+  <button mat-button (click)="close()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Close</button>
+</mat-dialog-actions>

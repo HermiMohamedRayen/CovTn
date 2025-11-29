@@ -1,0 +1,24 @@
+@if (isLoaded) {
+
+<main class="main-content">
+     <h2>My Participations</h2>
+<section class="latest-rides" aria-labelledby="latest-heading">
+        <div class="rides-list">
+            @if (participations().length != 0) {
+            <article class="ride-card"  *ngFor="let participation of participations()" aria-label="Ride {{participation.ride.title}}">
+                <app-ride-item [ride]="participation.ride">
+                    <button class="ride-action ride-unparticipate" (click)="removepart(participation)" [disabled]="!participation.ride.approved" > Unparticipate </button>
+                </app-ride-item>
+            </article>
+        }
+            <div *ngIf="participations().length === 0">
+                <p>You have not participated in any rides yet.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+} @else {
+    <p>Loading your participations...</p>
+}

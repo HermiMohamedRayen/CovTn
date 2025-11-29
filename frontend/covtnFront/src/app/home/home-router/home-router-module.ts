@@ -11,6 +11,7 @@ import { CarComponent } from '../car-component/car-component';
 import { MyRidesComponent } from '../my-rides-component/my-rides-component';
 import { ViewCarComponent } from '../view-car-component/view-car-component';
 import { DriverViewDetail } from '../driver-view-detail/driver-view-detail';
+import { MyParticipationComponent } from '../my-participation-component/my-participation-component';
 
 
 
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'my-rides', component: MyRidesComponent },
   { path: 'view-car', component: ViewCarComponent },
   { path: 'driver-view-detail', component: DriverViewDetail },
+  { path: 'my-participations', component: MyParticipationComponent },
   
 
 

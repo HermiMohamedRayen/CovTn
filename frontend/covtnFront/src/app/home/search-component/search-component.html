@@ -1,66 +1,62 @@
 <div class="mx-3 pb-4">
-<div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5">
+  <div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5" [formGroup]="form">
 
-  <!-- HEADER -->
-  <h2 class="text-2xl font-semibold mb-4 text-center">Search Ride 🔍</h2>
+    <!-- HEADER -->
+    <h2 class="text-2xl font-semibold mb-4 text-center">Search Ride 🔍</h2>
 
-  <!-- MODE SWITCH -->
-  <div class="flex justify-center gap-5 mb-4">
-    <label class="flex items-center gap-2 cursor-pointer">
-      <input type="radio" name="mode" value="departure"
-             [checked]="mode === 'departure'"
-             (change)="setMode('departure')" />
-      <span>Set Departure</span>
-    </label>
+    <!-- MODE SWITCH -->
+    <div class="flex justify-center gap-5 mb-4">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="radio" name="mode" value="departure" [checked]="mode === 'departure'"
+          (change)="setMode('departure')" />
+        <span>Set Departure</span>
+      </label>
 
-    <label class="flex items-center gap-2 cursor-pointer">
-      <input type="radio" name="mode" value="destination"
-             [checked]="mode === 'destination'"
-             (change)="setMode('destination')" />
-      <span>Set Destination</span>
-    </label>
-  </div>
-
-   <!-- NEW: TIME INPUTS -->
-  <div class="grid grid-cols-2 gap-4 mb-4">
-    <div>
-      <label class="block font-medium mb-1">🕒 Departure Time</label>
-      <input type="datetime-local"
-             class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400" />
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="radio" name="mode" value="destination" [checked]="mode === 'destination'"
+          (change)="setMode('destination')" />
+        <span>Set Destination</span>
+      </label>
     </div>
-    <div>
-      <label class="block font-medium mb-1">🕓 Arrival Time</label>
-      <input type="datetime-local"
-             class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400" />
+
+    <!-- NEW: TIME INPUTS -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-medium mb-1">🕒 Departure Time</label>
+        <input type="datetime-local" formControlName="departureTime"
+          class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 input" 
+          [min]="minDepartureTime"
+          />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">🕓 Arrival Time</label>
+        <input type="datetime-local" formControlName="arrivalTime"
+          class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 input" />
+      </div>
     </div>
-  </div>
 
 
-  <!-- MAP SECTION -->
-  <div class="mb-4">
-    <h3 class="text-lg font-semibold mb-2 text-center">Map</h3>
-    <div
-      id="map-container"
-      class="w-full h-72 bg-gray-100 border rounded-xl shadow-inner flex items-center justify-center"
-    >
+    <!-- MAP SECTION -->
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-2 text-center">Map</h3>
+      <div id="map-container"
+        class="w-full h-72 bg-gray-100 border rounded-xl shadow-inner flex items-center justify-center">
         <div id="map" class="w-full h-full rounded-xl"></div>
+      </div>
     </div>
+
+
+    <!-- SEARCH BUTTON -->
+    <button class="w-full py-3 rounded-xl text-white font-medium transition btn" (click)="onSearch()">
+      Search
+    </button>
+
   </div>
-
- 
-  <!-- SEARCH BUTTON -->
-  <button
-    class="w-full py-3 rounded-xl text-white font-medium transition btn"
-    (click)="onSearch()"
-  >
-    Search
-  </button>
-
-</div>
-  <div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5 mb-3" *ngIf="rides().length > 0">
-            <article class="ride-card" *ngFor="let ride of rides()"   aria-label="Ride {{'ride.title'}}">
-                <app-ride-item [ride]="ride">
-                </app-ride-item>
-            </article>
-</div>
+    <div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg border mt-5 mb-3" *ngIf="rides().length > 0" #searchResults>
+      <article class="ride-card mt-3" *ngFor="let ride of rides()" aria-label="Ride {{'ride.title'}}">
+        <app-ride-item [ride]="ride">
+        </app-ride-item>
+      </article>
+    </div>
+  
 </div>

@@ -8,7 +8,8 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ApiService {
 
-  private apiUrl = 'http://localhost:9092/api';
+  public static baseapiUrl = 'http://192.168.100.101:9092/api';
+  private apiUrl = ApiService.baseapiUrl;
   constructor(private http: HttpClient) { }
 
   public static user = signal<any>(null);
@@ -218,8 +219,10 @@ export class ApiService {
     });
   }
 
-  searchRides(deplat: number, delong: number, destlat: number, destlong: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/user/searchRides?deplat=${deplat}&deplon=${delong}&destlat=${destlat}&destlon=${destlong}`, {
+  searchRides(deplat: number, delong: number, destlat: number, destlong: number, departureTime: string, arrivalTime: string): Observable<any[]> {
+    departureTime = departureTime.replace('T',' ');
+    arrivalTime = arrivalTime.replace('T',' ');
+    return this.http.get<any[]>(`${this.apiUrl}/user/searchRides?deplat=${deplat}&deplon=${delong}&destlat=${destlat}&destlon=${destlong}&depTime=${departureTime}&arrTime=${arrivalTime}`, {
       headers: {
         'Authorization': `Bearer ${this.loadToken()}`
       }
@@ -278,16 +281,77 @@ export class ApiService {
     });
   }
 
-  getComments(rideId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/ride/${rideId}/comments`, {
+  
+
+  addComment(driver: any, comment: any): Observable<any> {
+    comment.user = {email : ApiService.user().email};
+    comment.targetUser = {email : driver};
+    console.log("Adding comment:", comment);
+    return this.http.post(`${this.apiUrl}/user/comment`, comment, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      },
+      responseType: 'text'
+    });
+  }
+  participateInRide(rideId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/user/ride/participate/${rideId}`, {}, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      },
+      responseType: 'text'
+    });
+  }
+  // getRideParticipants(rideId: number): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.apiUrl}/ride/${rideId}/participations`, {
+  //     headers: {
+  //       'Authorization': `Bearer ${this.loadToken()}`
+  //     }
+  //   });
+  // }
+
+  isParticipant(rideId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/ride/${rideId}/isParticipated`, {
       headers: {
         'Authorization': `Bearer ${this.loadToken()}`
       }
     });
   }
 
-  addComment(rideId: number, comment: { text: string, rating: number }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/ride/${rideId}/comment`, comment, {
+  getMyParticipatedRides(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/participations`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  }
+
+  getMyRides(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/driver/rides`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  }
+  getCarInfo(email : string): Observable<any> {
+    
+    return this.http.get<any>(`${this.apiUrl}/user/getCarInfo/${email}`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  }
+  getUserInfo(email : string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/userInfo/${email}`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  
+  }
+
+  unparticipateFromRide(rideParticipationsId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/user/ride/unparticipate/${rideParticipationsId}`, {
       headers: {
         'Authorization': `Bearer ${this.loadToken()}`
       },
@@ -295,4 +359,20 @@ export class ApiService {
     });
   }
 
+  getLatestRidesToUser(lat: number, lon: number): Observable<any> { 
+    return this.http.get(`${this.apiUrl}/user/latestRide/${lat}/${lon}`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      }
+    });
+  }
+
+  removeRide(rideId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/driver/ride/${rideId}`, {
+      headers: {
+        'Authorization': `Bearer ${this.loadToken()}`
+      },
+      responseType: 'text'
+    });
+  }
 }

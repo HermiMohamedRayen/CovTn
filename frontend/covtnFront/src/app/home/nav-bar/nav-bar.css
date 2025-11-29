@@ -49,6 +49,38 @@
     transform: scale(1.05);
 }
 
+.notification-button {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #667eea;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 16px;
+    transition: transform 0.2s;
+}
+
+.notification-button:hover {
+    transform: scale(1.1);
+}
+
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    border: 2px solid white;
+}
+
+
 .profile-button {
     padding: 10px 24px;
     border-radius: 10px;

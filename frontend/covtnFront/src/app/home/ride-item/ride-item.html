@@ -1,9 +1,24 @@
 <h4 class="ride-title text-center">{{ ride_item().from }} → {{ ride_item().to }}</h4>
+<div class="flex justify-center my-2">
+    <span class="px-3 py-1 rounded-full text-xs font-semibold" *ngIf="!ride_item().approved"
+          [ngClass]="'bg-amber-100 text-amber-700 border border-amber-200'">
+        {{ 'not Approved' }}
+    </span>
+</div>
 <p class="ride-meta">
     <span class="ride-route">{{ ride_item().departureTime | date:'yyyy-MM-dd HH:mm' }}</span>
     <span class="ride-date">{{ ride_item().arrivalTime | date:'yyyy-MM-dd HH:mm' }}</span>
 </p>
-<p class="ride-desc">available seats: {{ ride_item().seats }}</p>
-                <button class="ride-action" (click)="viewRide()" [disabled]="loading">View</button>
+<div *ngIf="ride_item()?.driver?.car">
+<p class="ride-desc">available seats: {{ ride_item().driver.car.seats - ride_item().rideParticipations.length }}</p>
+
+<p class="ride-desc" *ngIf="ride_item().driver.car.seats - ride_item().rideParticipations.length <=0 ">
+    No seats available
+</p>
+</div>
+
+<button class="ride-action" (click)="viewRide()" [disabled]="loading || !(ride.approved || ride.driver.email == userEmail)" >
+    view
+</button>
 
 <ng-content></ng-content>

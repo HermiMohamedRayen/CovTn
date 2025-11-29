@@ -1,11 +1,17 @@
 <main class="main-content">
 <section class="latest-rides" aria-labelledby="latest-heading">
         <div class="rides-list">
-            <article class="ride-card" *ngFor="let ride of rides; let i = index" [attr.data-index]="i" aria-label="Ride {{ride.title}}">
+            <article class="ride-card relative" *ngFor="let ride of rides(); let i = index" [attr.data-index]="i" aria-label="Ride {{ride.title}}">
                 <app-ride-item [ride]="ride">
+                    <button (click)="remove(ride)" 
+                        class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-red-50 text-gray-400 hover:text-red-500 transition-all duration-200 shadow-sm border border-gray-100 z-10"
+                        title="Remove ride">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <button class="ride-action participants-action" style="float: right;" (click)="openParticipantsDialog(ride, $event)">Participants</button>
                 </app-ride-item>
             </article>
         </div>
-        <div *ngIf="!rides || rides.length === 0" class="no-rides">No recent rides available.</div>
+        <div *ngIf="!rides() || rides().length === 0" class="no-rides">No recent rides available.</div>
     </section>
 </main>

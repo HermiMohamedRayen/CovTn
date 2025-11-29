@@ -12,9 +12,74 @@ export class MapService {
     this.http = http;
   }
 
+  private getOldGeoLoc(loc : {latitude: number, longitude: number}): any{
+    const geoCode = localStorage.getItem('geoCode');
+    if(geoCode){
+      try {
+        const geoObj : Array<any> = JSON.parse(geoCode);
+        const found = geoObj.find(geo => geo.latitude === String(loc.latitude) && geo.longitude === String(loc.longitude));
+        return found || null;
+      } catch (e) {
+        console.error('Error parsing geoCode', e);
+        return null;
+      }
+    }
+    return null;
+  }
+
+   private setOldGeoLoc(lat: number, lon: number, data: any): void{
+    const geoCode = localStorage.getItem('geoCode');
+    let geoObj : Array<any> = [];
+    if(geoCode){
+      try {
+        geoObj = JSON.parse(geoCode);
+      } catch (e) {
+        geoObj = [];
+      }
+    }
+    
+    const exists = geoObj.some(geo => geo.latitude === String(lat) && geo.longitude === String(lon));
+    if (exists) return;
+
+    const less = {
+      latitude: String(lat), 
+      longitude: String(lon),
+      display_name: data.display_name, 
+      address: data.address,
+      name: data.name
+    };
+    geoObj.push(less);
+    
+    // Limit cache size
+    if (geoObj.length > 200) {
+      geoObj.shift();
+    }
+
+    localStorage.setItem('geoCode', JSON.stringify(geoObj));
+  }
+
   public reverseGeocode(latitude: number, longitude: number) : Observable<Object> {
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-    return this.http.get(url).pipe(shareReplay(1));
+    const obs = { latitude, longitude };
+    const code = this.getOldGeoLoc(obs);
+    if(code){
+      return new Observable((subscriber) => {
+        subscriber.next(code);
+        subscriber.complete();
+      });
+    }
+    return new Observable((subscriber) => {
+      this.http.get(url).subscribe(
+        { next: (data) => {
+            this.setOldGeoLoc(latitude, longitude, data);
+            subscriber.next(data);
+            subscriber.complete();
+          }, error: (err) => {
+            subscriber.error(err);
+          },
+        }
+      );
+    });
   }
   
   
@@ -32,7 +97,7 @@ export class MapService {
     return 14 - z;
   }
 
-  public getUserLocation(): Promise<{latitude: number, longitude: number , accuracy: number}> {
+  public getUserLocation(): Promise<any> {
     return new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(
         // Success callback
@@ -59,6 +124,7 @@ export class MapService {
                     break;
                 
             }
+            reject(error);
         },
         // Optional options object
         {

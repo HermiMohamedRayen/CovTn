@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+@import "../propose-ride/propose-ride.css";
+
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
