@@ -41,12 +41,24 @@
             </div>
         </div>
 
+        @if((ride()?.driver?.email == user()?.email) ||  (ride()?.driver == user()?.email)){
         <div
       class="p-3 rounded-xl text-center"
       [ngClass]="ride()?.approved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
     >
       {{ ride()?.approved ? '✔ Approved Ride' : '⛔ Waiting for Approval' }}
     </div>
+    }@else {
+        @if (ride()?.approved) {
+        <button #participateButton (click)="participateInRide($event)" 
+            disabled
+            [ngClass]="{'bg-gradient-to-r from-blue-600 to-indigo-600 text-white': !participateButton.disabled, 'bg-gray-400 text-gray-700 cursor-not-allowed': participateButton.disabled}"
+            class="w-full mt-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="bi bi-person-plus-fill"></i>
+            Wait
+        </button>
+        }
+    }
 
         <!-- MAP SECTION -->
         <div class="mt-4">
@@ -56,16 +68,17 @@
             </div>
         </div>
 
-        <div class="w-full bg-white rounded-2xl shadow-md border p-6 space-y-4 animate-slide-up">
+        <!-- COMMENTS SECTION -->
+        <div class="w-full bg-white rounded-2xl shadow-md border p-6 space-y-4 animate-slide-up" >
             <!-- Comments Header -->
             <div class="flex items-center justify-between mb-4 pb-4 border-b">
                 <div class="flex items-center gap-3">
-                    <h3 class="text-xl font-bold">💬 Reviews & Comments</h3>
+                    <h3 class="text-xl font-bold">💬 Reviews & Comments For Driver</h3>
                     <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ comments().length }}
+                        {{ ride().driver?.ratings.length }}
                     </span>
                 </div>
-                <div *ngIf="comments().length > 0" class="flex items-center gap-2 text-amber-500">
+                <div *ngIf="ride().driver?.ratings.length > 0" class="flex items-center gap-2 text-amber-500">
                     <i class="bi bi-star-fill"></i>
                     <span class="font-semibold">{{ getAverageRating() }}/5</span>
                 </div>
@@ -73,22 +86,23 @@
 
             <!-- Comments List -->
             <div class="max-h-96 overflow-y-auto space-y-3 mb-4 pr-2 custom-scrollbar">
-                <div *ngIf="comments().length === 0" class="text-center py-8">
+                <div *ngIf="ride().driver?.ratings.length === 0" class="text-center py-8">
                     <i class="bi bi-chat-left text-4xl text-gray-300 mb-2 block"></i>
                     <p class="text-gray-400 font-medium">No comments yet</p>
                     <p class="text-gray-500 text-sm">Be the first to share your experience!</p>
                 </div>
                 
-                <div *ngFor="let comment of comments()" class="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 hover:shadow-md transition-all duration-300 animate-fade-in">
+                <div *ngFor="let comment of ride().driver?.ratings" class="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 hover:shadow-md transition-all duration-300 animate-fade-in">
                     <!-- User Info -->
+                     
                     <div class="flex items-start gap-3 mb-3">
-                        <img [src]="'https://ui-avatars.com/api/?name=' + comment.user?.firstName + '+' + comment.user?.lastName + '&background=667eea&color=fff'" 
+                        <img [src]="'https://ui-avatars.com/api/?name=' + (comment.user.email || comment.user)  + '&background=667eea&color=fff'" 
                             alt="{{ comment.user?.firstName }}"
                             class="w-10 h-10 rounded-full border-2 border-blue-300 flex-shrink-0" />
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between gap-2">
                                 <span class="font-semibold text-gray-800">
-                                    {{ comment.user?.firstName }} {{ comment.user?.lastName }}
+                                    {{ comment.user.firstName }} {{ comment.user?.lastName }}
                                 </span>
                                 <span class="text-xs text-gray-500">{{ comment.createdAt | date:'short' }}</span>
                             </div>
@@ -104,12 +118,12 @@
                         </div>
                     </div>
                     <!-- Comment Text -->
-                    <p class="text-gray-700 text-sm leading-relaxed">{{ comment.text }}</p>
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ comment.comment }}</p>
                 </div>
             </div>
 
             <!-- Add Comment Form -->
-            <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="border-t pt-4 space-y-4">
+            <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="border-t pt-4 space-y-4" *ngIf="(ride()?.driver?.email != user()?.email) &&  (ride()?.driver != user()?.email)">
                 <h4 class="text-base font-semibold text-gray-800 flex items-center gap-2">
                     <i class="bi bi-pencil-square text-blue-600"></i>
                     Leave Your Review
@@ -143,25 +157,25 @@
                 <div>
                     <label class="block text-sm font-semibold mb-2 text-gray-700">Your Comment <span class="text-red-500">*</span></label>
                     <textarea 
-                        formControlName="text"
+                        formControlName="comment"
                         placeholder="Share your experience with this ride... (minimum 5 characters)"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all placeholder-gray-400"
                         rows="3"></textarea>
                     <div class="flex items-center justify-between mt-2">
                         <div class="flex gap-2">
-                            <small *ngIf="commentForm.get('text')?.hasError('required') && commentForm.get('text')?.touched" 
+                            <small *ngIf="commentForm.get('comment')?.hasError('required') && commentForm.get('comment')?.touched" 
                                 class="text-red-500 flex items-center gap-1">
                                 <i class="bi bi-exclamation-circle"></i>
                                 Comment is required
                             </small>
-                            <small *ngIf="commentForm.get('text')?.hasError('minlength') && commentForm.get('text')?.touched" 
+                            <small *ngIf="commentForm.get('comment')?.hasError('minlength') && commentForm.get('comment')?.touched" 
                                 class="text-red-500 flex items-center gap-1">
                                 <i class="bi bi-exclamation-circle"></i>
                                 Minimum 5 characters required
                             </small>
                         </div>
                         <small class="text-gray-500">
-                            {{ commentForm.get('text')?.value?.length || 0 }}/500
+                            {{ commentForm.get('comment')?.value?.length || 0 }}/500
                         </small>
                     </div>
                 </div>

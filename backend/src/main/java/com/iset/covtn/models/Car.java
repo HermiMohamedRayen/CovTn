@@ -1,10 +1,7 @@
 package com.iset.covtn.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +13,6 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +27,8 @@ public class Car {
     @Transient
     private ArrayList<String> photosToRemove;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "email")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToOne(fetch = FetchType.EAGER,mappedBy = "car")
     private UserInfo user;
 

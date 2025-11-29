@@ -1,9 +1,12 @@
 package com.iset.covtn.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.iset.covtn.models.RideParticipation;
+import com.iset.covtn.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +35,12 @@ public class AdminController {
 
     @Autowired
     private RideService rideService;
+    @Autowired
+    private RideRepository rideRepository;
 
-     /**
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+    /**
      * Liste de tous les utilisateurs (admin uniquement)
      */
     @GetMapping("/users")
@@ -146,6 +153,12 @@ public class AdminController {
     public ResponseEntity<Ride> approveRide(@PathVariable Long id) {
         try {
             Ride ride = rideService.approveRide(id);
+            String depart = sdf.format(ride.getDeparture()) ;
+            String arrive = sdf.format(ride.getArrivalTime());
+            userService.sendMessage(ride.getDriver().getEmail(),"you have an approved ride that depart at "+depart+" and arrive at "+arrive);
+            ride.getRideParticipations().forEach(participation -> {
+                userService.sendMessage(participation.getRider().getEmail(),"a ride which you are participated in that depart at "+depart+" and arrive at "+arrive+" have been approved");
+            });
             return ResponseEntity.ok(ride);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -156,6 +169,13 @@ public class AdminController {
     public ResponseEntity<Ride> rejectRide(@PathVariable Long id) {
         try {
             Ride ride = rideService.rejectRide(id);
+            String depart = sdf.format(ride.getDeparture()) ;
+            String arrive = sdf.format(ride.getArrivalTime());
+            userService.sendMessage(ride.getDriver().getEmail(),"you have a rejected ride that depart at "+depart+" and arrive at "+arrive);
+            ride.getRideParticipations().forEach(participation -> {
+                userService.sendMessage(participation.getRider().getEmail(),"a ride which you are participated in that depart at "+depart+" and arrive at "+arrive+" have been rejected");
+            });
+
             return ResponseEntity.ok(ride);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -165,7 +185,23 @@ public class AdminController {
     @DeleteMapping("/rides/{id}")
     public ResponseEntity<String> deleteRide(@PathVariable Long id) {
         try {
+            Ride ride = rideRepository.findById(id).orElse(null);
+            if(ride == null) {
+                throw new Exception("Ride not found");
+            }
             rideService.deleteRide(id);
+            String depart = " ";
+            String arrive = " ";
+            try {
+                depart = sdf.format(ride.getDepartureTime());
+                arrive = sdf.format(ride.getArrivalTime());
+            }catch (Exception e){
+                System.err.println(e);
+            }
+            userService.sendMessage(ride.getDriver().getEmail(),"one of your rides that depart at "+depart+" and arrive at "+arrive+" has been deleted by the administrator");
+            for(RideParticipation participation : ride.getRideParticipations()) {
+                userService.sendMessage(participation.getRider().getEmail(), "a ride which you are participated in that depart at " + depart + " and arrive at " + arrive + " have been deleted");
+            }
             return ResponseEntity.ok("Ride deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

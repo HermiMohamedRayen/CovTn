@@ -1,1 +1,6 @@
 @import "../main-component/main-component.css";
+@import "../ride-item/ride-item.css";
+
+.participants-action {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}

@@ -3,7 +3,7 @@
   <div class="header">
     <div class="header-content">
       <button class="back-button" (click)="previousPage()">
-        <i class="bi bi-arrow-left"></i>
+        <mat-icon>arrow_back</mat-icon>
       </button>
       <h1>Profile</h1>
       <div class="spacer"></div>
@@ -22,7 +22,7 @@
      
 
       <div class="avatar" *ngIf="noimg == 0" (click)="updateimg()">
-        <i class="bi bi-person"></i>
+        <mat-icon>person</mat-icon>
       </div>
         <img [src]="imgUrl" alt="Profile Image" class="avatar" (click)="updateimg()" *ngIf="noimg == 1" />
 
@@ -31,8 +31,8 @@
       <p>{{ user().email }}</p>
       
       @if (apiService.hasRole("ROLE_DRIVER")){<div class="rating">
-        <i class="bi bi-star"></i>
-        <span>N/A</span>
+        <mat-icon class="rating-star">star</mat-icon>
+        <span>{{ getAverageRating() }}</span>
       </div>}
     </div>
 
@@ -42,7 +42,7 @@
       <div class="contact-list">
         <div class="contact-item">
           <div class="icon-container">
-            <i class="bi bi-telephone"></i>
+            <mat-icon>phone</mat-icon>
           </div>
           <span (dblclick)="updatePhoneNumber()">{{ user().number || 'N/A' }}</span>
           <small>Double-click to update</small>
@@ -50,7 +50,7 @@
 
         <div class="contact-item">
           <div class="icon-container">
-            <i class="bi bi-envelope-at-fill"></i>
+            <mat-icon>email</mat-icon>
           </div>
           <span>{{ user().email }}</span>
         </div>
@@ -61,13 +61,22 @@
     <div class="info-card">
       <h3>Settings</h3>
 
-      <!-- Dark Theme -->
       <div class="setting-item" *ngIf="user().car" (click)="viewCar()">
         <div class="setting-info">
           <div class="icon-container">
-            <i class="bi bi-car-front"></i>
+            <mat-icon>directions_car</mat-icon>
           </div>
             <span>My car</span>
+            
+        </div>
+       
+      </div>
+      <div class="setting-item" (click)="viewParticipations()">
+        <div class="setting-info">
+          <div class="icon-container">
+            <mat-icon>event_seat</mat-icon>
+          </div>
+            <span>My Participations</span>
             
         </div>
        
@@ -75,7 +84,7 @@
       <div class="setting-item" *ngIf="user().rides && user().rides.length > 0" routerLink="/my-rides">
         <div class="setting-info">
           <div class="icon-container">
-            <i class="bi bi-car-front"></i>
+            <mat-icon>navigation</mat-icon>
           </div>
             <span>My rides</span>
             

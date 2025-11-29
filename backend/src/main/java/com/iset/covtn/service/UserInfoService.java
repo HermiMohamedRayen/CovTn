@@ -3,7 +3,9 @@ package com.iset.covtn.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.UserInfo;
 import com.iset.covtn.repository.UserInfoRepository;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 
 
 @Service
@@ -30,6 +34,12 @@ public class UserInfoService implements UserDetailsService {
     private UserInfoRepository repository;
 
     private final ObjectProvider<PasswordEncoder> passwordEncoderProvider;
+
+    private static final Map<String, List<SseEmitter>> userEmitters = new ConcurrentHashMap<>();
+
+    private static Map<String, List<String>> pendingNotifications = new ConcurrentHashMap<>();
+
+
 
     public UserInfoService(ObjectProvider<PasswordEncoder> passwordEncoderProvider) {
         this.passwordEncoderProvider = passwordEncoderProvider;
@@ -260,6 +270,61 @@ public class UserInfoService implements UserDetailsService {
             throw new UsernameNotFoundException("Utilisateur introuvable : " + email);
         }
     }
+
+    public ResponseEntity<?> sendMessage(String email, String message) {
+
+        List<SseEmitter> emitters = userEmitters.get(email);
+
+        // No emitters -> user is offline -> store the notification
+        if (emitters == null || emitters.isEmpty()) {
+            pendingNotifications
+                    .computeIfAbsent(email, k -> new ArrayList<>())
+                    .add(message);
+
+            return ResponseEntity.ok("User offline: saved notification.");
+        }
+
+        List<SseEmitter> deadEmitters = new ArrayList<>();
+
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.send(SseEmitter.event()
+                        .name("notification")
+                        .data(message));
+            } catch (Exception e) {
+                deadEmitters.add(emitter);
+            }
+        }
+
+        emitters.removeAll(deadEmitters);
+
+        return ResponseEntity.ok("Sent to user " + email);
+    }
+
+    public SseEmitter getMessages(String email) {
+        SseEmitter emitter = new SseEmitter(0L);
+        // 3. Store emitter for this user
+        userEmitters.computeIfAbsent(email, k -> new ArrayList<>()).add(emitter);
+
+        List<String> pending = pendingNotifications.get(email);
+        if (pending != null) {
+            for (String msg : pending) {
+                try {
+                    emitter.send(SseEmitter.event()
+                            .name("notification")
+                            .data(msg));
+                } catch (Exception ignored) {}
+            }
+            pendingNotifications.remove(email); // Clear
+        }
+
+        // 4. Clean up on disconnect
+        emitter.onCompletion(() -> userEmitters.get(email).remove(emitter));
+        emitter.onTimeout(() -> userEmitters.get(email).remove(emitter));
+
+        return emitter;
+    }
+
 }
 
     

@@ -1,0 +1,15 @@
+@import "../main-component/main-component.css";
+@import "../ride-item/ride-item.css";
+
+.ride-unparticipate {
+    float: right;
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 36px;
+}

@@ -28,6 +28,8 @@ export class ProposeRide implements OnInit {
     arrivalTime: '',
   };
 
+    minDepartureTime: string = new Date().toISOString().slice(0,16);
+
 
 
   constructor(private fb: FormBuilder, private mapService: MapService, private apiService: ApiService, private router: Router) {
@@ -64,7 +66,16 @@ export class ProposeRide implements OnInit {
 
 
   async ngOnInit() {
-    const cnt = await this.mapService.getUserLocation()
+    let cnt ;
+    await this.mapService.getUserLocation().then((location) => {
+      cnt = location;
+    },(error) => {
+      console.error('Error getting user location:', error);
+    });
+
+    if(!cnt){
+      cnt = {latitude: 36.8065, longitude: 10.1815 , accuracy: 0  };
+    }
 
     this.mapdep =L.map("mapdep").setView([cnt.latitude, cnt.longitude], 10); 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // Routes publiques
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**","/api/notifications/**").permitAll()
 
                         // Routes protégées par rôles
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")

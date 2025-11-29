@@ -3,6 +3,14 @@
     @if (this.apiService.hasRole('ROLE_ADMIN')) {
         <a class="navbar-link-admin" routerLink="/admin">Admin</a>
     }
+    
+    <button class="notification-button" (click)="openNotifications()">
+        <i class="bi bi-bell"></i>
+        <span class="badge" *ngIf="notificationService.unreadCount() > 0">
+            {{ notificationService.unreadCount() > 9 ? '9+' : notificationService.unreadCount() }}
+        </span>
+    </button>
+
     <button class="profile-button" routerLink="/profile">
         <i class="bi bi-person"></i>
     </button>

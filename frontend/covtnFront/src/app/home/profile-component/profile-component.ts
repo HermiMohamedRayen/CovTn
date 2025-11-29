@@ -97,4 +97,15 @@ export class ProfileComponent {
       }
     }
   }
+  viewParticipations() {
+    this.router.navigate(['/my-participations']);
+  }
+
+  getAverageRating() {
+    if (!this.user().ratings || this.user().ratings.length === 0) {
+      return "N/A";
+    }
+    const sum = this.user().ratings.reduce((acc:any, rating:any) => acc + rating.rating, 0);
+    return Math.round((sum / this.user().ratings.length) * 10) / 10;
+  }
 }

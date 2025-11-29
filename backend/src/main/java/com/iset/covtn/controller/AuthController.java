@@ -180,6 +180,21 @@ public class AuthController {
         return "Utilisateur promu en tant qu'administrateur : " + email;
     }
 
-   
+    /*
+
+    @GetMapping("/restorePass")
+    public ResponseEntity<?> restorePass(@RequestParam String email) {
+        UserInfo user = userService.findByEmail(jwtService.extractUsername(email));
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+        String token = jwtService.generateToken(new UserInfoDetails(user));
+        return ResponseEntity.ok(mailVerifier(user.getEmail(), token));
+
+    }
+
+     */
+
+
     
 }

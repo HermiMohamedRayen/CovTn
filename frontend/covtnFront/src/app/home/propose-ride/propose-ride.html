@@ -28,6 +28,7 @@
         <label>🕒 Departure Time</label>
         <input type="datetime-local" class="input"
                formControlName="departureTime"
+               [min]="minDepartureTime"
                #depTimeInput
                  />
       </div>

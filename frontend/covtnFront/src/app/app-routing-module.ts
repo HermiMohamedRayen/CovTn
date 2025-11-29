@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './home/main-component/main-component';
 import { AuthGuard } from './auth-gard-guard';
 import { AuthentificationComponent } from './authentification-component/authentification-component';
@@ -16,9 +16,9 @@ const routes: Routes = [
   { path: 'admin', loadChildren: () => import('./admin/admin-module').then(m => m.AdminModule), canActivate: [AuthGuard, AdminGuard], canActivateChild: [AdminGuard] },
   { path: 'mail-verify', component: MailVerifyComponent },
   
-
-
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

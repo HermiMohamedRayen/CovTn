@@ -12,6 +12,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ViewCarComponent implements OnInit{
 
+  protected user = ApiService.user;
+
   @Input({required:false}) inputcar!: any;
   car = signal({ photos: [], photosUrl: [] } as any);
   extra: any;

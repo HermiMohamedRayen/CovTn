@@ -2,6 +2,7 @@ import { Component, Input, OnInit, signal } from '@angular/core';
 import { MapService } from '../../map-service';
 import { NavigationExtras, Router } from '@angular/router';
 import { firstValueFrom, forkJoin } from 'rxjs';
+import { ApiService } from '../../api-service';
 
 @Component({
   selector: 'app-ride-item',
@@ -14,14 +15,19 @@ export class RideItem implements OnInit{
 
   ride_item = signal({} as any);
 
+  userEmail = ApiService.user().email;
+
   loading = true
 
-  constructor(private mapService: MapService, private router: Router) {
-    
+  constructor(private mapService: MapService, private router: Router, private apiService: ApiService) {
+  
    }
 
   async ngOnInit() {
     this.ride_item.set(this.ride);
+    if(this.ride.driver && !this.ride.driver.email){
+      this.getCar(this.ride.driver);
+    }
 
     const depReq = this.mapService.reverseGeocode(this.ride.departure.latitude, this.ride.departure.longitude);
     const destReq = this.mapService.reverseGeocode(this.ride.destination.latitude, this.ride.destination.longitude);
@@ -49,6 +55,15 @@ export class RideItem implements OnInit{
       }
     };
     this.router.navigate(['/ride-detail/' + this.ride_item().id], navigationExtras);
+  }
+
+  getCar(email : string){
+    this.apiService.getCarInfo(email).subscribe((carData) => {
+      this.ride_item.update((ride) => ({
+        ...ride,
+        driver : {...ride.driver, car: carData}
+      }));
+    });
   }
 
 

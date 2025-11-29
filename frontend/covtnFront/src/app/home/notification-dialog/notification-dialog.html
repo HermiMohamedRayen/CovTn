@@ -1,0 +1,27 @@
+<div class="notification-container">
+    <div class="header">
+        <h2 class="text-xl font-bold">Notifications</h2>
+        <span class="text-sm text-gray-500" *ngIf="notificationService.notifications().length > 0">
+            {{ notificationService.notifications().length }} recent
+        </span>
+    </div>
+
+    <div class="notification-list custom-scrollbar">
+        <div *ngIf="notificationService.notifications().length === 0" class="empty-state">
+            <i class="bi bi-bell-slash text-4xl text-gray-300 mb-2"></i>
+            <p class="text-gray-500">No notifications yet</p>
+        </div>
+
+        <div *ngFor="let notification of notificationService.notifications()" 
+             class="notification-item"
+             [class.unread]="!notification.read">
+            <div class="icon-wrapper">
+                <i class="bi bi-info-circle-fill text-blue-500"></i>
+            </div>
+            <div class="content">
+                <p class="message">{{ notification.message }}</p>
+                <span class="time">{{ notification.timestamp | date:'short' }}</span>
+            </div>
+        </div>
+    </div>
+</div>

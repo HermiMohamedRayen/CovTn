@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../../api-service';
 import { NavigationExtras, Router } from '@angular/router';
+import { MapService } from '../../map-service';
 
 @Component({
   selector: 'app-main-component',
@@ -17,16 +18,18 @@ export class MainComponent {
 
   constructor(
     protected apiService: ApiService,
+    private mapService: MapService,
     private router: Router
   ) {
-    this.apiService.getLatestRides().subscribe({
-      next: (rides) => {
-        this.latestRides = rides;
-      },
-      error: (error) => {
-        console.error('Error fetching latest rides:', error);
-      }
+
+
+    this.mapService.getUserLocation().then((location) => {
+      this.latestRideToUser(location);
+    },(error) => {
+      this.anylatestRides();
     });
+
+    
    }
 
   onSearch(): void {
@@ -57,5 +60,26 @@ export class MainComponent {
       
     }
   }
-    
+
+  anylatestRides() {
+    this.apiService.getLatestRides().subscribe({
+      next: (rides) => {
+        this.latestRides = rides;
+      },
+      error: (error) => {
+        console.error('Error fetching latest rides:', error);
+      }
+    });
+  }
+
+  latestRideToUser(location: any) {
+    this.apiService.getLatestRidesToUser(location.latitude, location.longitude).subscribe({
+      next: (rides) => {
+        this.latestRides = rides;
+      },
+      error: (error) => {
+        console.error('Error fetching latest rides to user location:', error);
+      }
+    });
+  }
 }
