@@ -55,6 +55,7 @@ class DriverController {
             return ResponseEntity.badRequest().body("add the car first");
         }
         ride.setDriver(user);
+        ride.setId(null);
         rideRepository.save(ride);
 
 
@@ -85,6 +86,7 @@ class DriverController {
 
         token = jwtService.extractUsername(token);
 
+        car.setId(null);
         userInfoService.setCar(car,token);
 
 

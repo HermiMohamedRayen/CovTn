@@ -60,8 +60,8 @@ public class UserInfoService implements UserDetailsService {
 
     // Add any additional methods for registering or managing users
     public String addUser(UserInfo userInfo) throws UserDejaExistException {
-        // Check if user already exists
-        if (repository.findByEmail(userInfo.getEmail()).isPresent()) {
+        Optional<UserInfo> usr = repository.findByEmail(userInfo.getEmail());
+        if (usr.isPresent()) {
             throw new UserDejaExistException("User already exists with email: " + userInfo.getEmail());
         }
 
@@ -69,6 +69,11 @@ public class UserInfoService implements UserDetailsService {
         PasswordEncoder encoder = passwordEncoderProvider.getIfAvailable();
         userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
         userInfo.addRole("ROLE_PASSENGER");
+        userInfo.setRideParticipations(new ArrayList<>());
+        userInfo.setRides(new ArrayList<>());
+        userInfo.setCar(null);
+        userInfo.setRatings(new ArrayList<>());
+        userInfo.setRatingsSent(new ArrayList<>());
         repository.save(userInfo);
         return "User added successfully!";
     }
@@ -91,6 +96,11 @@ public class UserInfoService implements UserDetailsService {
                 updatedUserInfo.setPassword(user.getPassword());
             }
             updatedUserInfo.setProfilePicture(user.getProfilePicture());
+            updatedUserInfo.setRides(user.getRides());
+            updatedUserInfo.setRideParticipations(user.getRideParticipations());
+            updatedUserInfo.setCar(user.getCar());
+            updatedUserInfo.setRatings(user.getRatings());
+            updatedUserInfo.setRatingsSent(user.getRatingsSent());
             repository.save(updatedUserInfo);
             return "User Updated Successfully";
         }

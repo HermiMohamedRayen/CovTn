@@ -153,12 +153,18 @@ public class AdminController {
     public ResponseEntity<Ride> approveRide(@PathVariable Long id) {
         try {
             Ride ride = rideService.approveRide(id);
-            String depart = sdf.format(ride.getDeparture()) ;
-            String arrive = sdf.format(ride.getArrivalTime());
+            String depart = "";
+            String arrive = "";
+            try{
+                depart = sdf.format(ride.getDepartureTime());
+                arrive = sdf.format(ride.getArrivalTime());
+            } catch (Exception e) {
+                System.err.println(e);
+            }
             userService.sendMessage(ride.getDriver().getEmail(),"you have an approved ride that depart at "+depart+" and arrive at "+arrive);
-            ride.getRideParticipations().forEach(participation -> {
+            for(RideParticipation participation : ride.getRideParticipations()) {
                 userService.sendMessage(participation.getRider().getEmail(),"a ride which you are participated in that depart at "+depart+" and arrive at "+arrive+" have been approved");
-            });
+            };
             return ResponseEntity.ok(ride);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -169,12 +175,18 @@ public class AdminController {
     public ResponseEntity<Ride> rejectRide(@PathVariable Long id) {
         try {
             Ride ride = rideService.rejectRide(id);
-            String depart = sdf.format(ride.getDeparture()) ;
-            String arrive = sdf.format(ride.getArrivalTime());
+            String depart = "";
+            String arrive = "";
+            try{
+                depart = sdf.format(ride.getDepartureTime());
+                arrive = sdf.format(ride.getArrivalTime());
+            } catch (Exception e) {
+                System.err.println(e);
+            }
             userService.sendMessage(ride.getDriver().getEmail(),"you have a rejected ride that depart at "+depart+" and arrive at "+arrive);
-            ride.getRideParticipations().forEach(participation -> {
+            for(RideParticipation participation : ride.getRideParticipations()) {
                 userService.sendMessage(participation.getRider().getEmail(),"a ride which you are participated in that depart at "+depart+" and arrive at "+arrive+" have been rejected");
-            });
+            };
 
             return ResponseEntity.ok(ride);
         } catch (RuntimeException e) {

@@ -91,6 +91,29 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserInfo userInfo) {
         try {
+
+            if(userInfo.getPassword().trim().length() < 8) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Passeword must be at least 8 characters long.");
+            }
+            if(userInfo.getEmail().trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email cannot be empty.");
+            }
+            if (!userInfo.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid email format.");
+            }
+            if(userInfo.getFirstName().trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Name cannot be empty.");
+            }
+            if (!userInfo.getLastName().trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Last name cannot be empty.");
+            }
+            
+
             userService.addUser(userInfo);
             
             String token = jwtService.generateToken(new UserInfoDetails(userInfo));
