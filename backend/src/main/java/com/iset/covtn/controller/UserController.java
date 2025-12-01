@@ -252,7 +252,6 @@ public class UserController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserInfo user = userService.findByEmail(userDetails.getUsername());
         user.getRideParticipations().forEach(rideParticipation -> {
-           rideParticipation.getRide().setDriver(null);
            rideParticipation.getRide().getRideParticipations().clear();
         });
         return ResponseEntity.ok(user.getRideParticipations());
@@ -260,12 +259,17 @@ public class UserController {
 
     @PostMapping("/comment")
     public ResponseEntity<?> addComment(@RequestBody Rating comment) {
+        System.err.println("begin");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserInfo user = userService.findByEmail(userDetails.getUsername());
         Optional<UserInfo> targetUser = userInfoRepository.findByEmail(comment.getTargetUser().getEmail());
         if(!targetUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+        if(targetUser.get().getEmail().equals(user.getEmail())) {
+            return ResponseEntity.badRequest().build();
+        }
+        comment.setId(null);
         comment.setUser(user);
         comment.setTargetUser(targetUser.get());
         ratingRepository.save(comment);
@@ -309,6 +313,22 @@ public class UserController {
 
     }
 
+
+    @DeleteMapping("/ride/unparticipate/r/{ride_id}")
+    public ResponseEntity<?> unParticipateByRideId(@PathVariable("ride_id") long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserInfo user = userService.findByEmail(userDetails.getUsername());
+        Optional<RideParticipation> part = rideParticipationRepository.findByRideIdAndRiderEmail(id, user.getEmail());
+        if(!part.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        if(part.get().getRide().getDepartureTime().before(new Date())) {
+            return ResponseEntity.status(HttpStatus.GONE).build();
+        }
+        rideParticipationRepository.delete(part.get());
+        return ResponseEntity.ok().build();
+
+    }
 
 
     @ExceptionHandler
