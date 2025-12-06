@@ -21,7 +21,7 @@ public class UserInfo {
     private String lastName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private long number;
+    private String number;
     private HashSet<String> roles; // ROLE_PASSENGER , ROLE_ADMIN, ROLE_DRIVER
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String profilePicture; // Store the filename or URL of the profile picture

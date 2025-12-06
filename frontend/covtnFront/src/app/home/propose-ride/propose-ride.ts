@@ -4,6 +4,7 @@ import { MapService } from '../../map-service';
 import * as L from 'leaflet';
 import { ApiService } from '../../api-service';
 import { Router } from '@angular/router';
+import { App } from '../../app';
 
 @Component({
   selector: 'app-propose-ride',
@@ -120,6 +121,7 @@ export class ProposeRide implements OnInit {
 
 
   onSubmit( depmap: HTMLElement, destmap: HTMLElement) {
+    App.loading.set(true);
     destmap.classList.remove('border-red-500');
     depmap.classList.remove('border-red-500');
     if (this.form.valid && this.departureMarker && this.destinationMarker) {
@@ -132,11 +134,13 @@ export class ProposeRide implements OnInit {
       this.apiService.proposeRide(this.ride).subscribe({
         next: (response) => {
           console.log('Ride proposed successfully', response);
-          alert('Ride proposed successfully!');
+          alert('Ride added successfully!');
           this.router.navigate(['/']);
+          App.loading.set(false);
         },
         error: (error) => {
           console.error('Error proposing ride', error);
+          App.loading.set(false);
         }
       });
       

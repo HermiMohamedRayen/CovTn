@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context=".ui.addcar.AddCarFragment">
+
+    <com.google.android.material.textfield.TextInputLayout android:id="@+id/car_model_layout"
+        android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginStart="16dp" android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/car_model_edit_text" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Car Model" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/car_matriculation_layout" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/car_model_layout"
+        app:layout_constraintStart_toStartOf="@+id/car_model_layout"
+        app:layout_constraintTop_toBottomOf="@+id/car_model_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/car_matriculation_edit_text" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="Car Matriculation" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/smoker_allowed_switch" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        android:text="Smoker Allowed"
+        app:layout_constraintEnd_toEndOf="@+id/car_matriculation_layout"
+        app:layout_constraintStart_toStartOf="@+id/car_matriculation_layout"
+        app:layout_constraintTop_toBottomOf="@+id/car_matriculation_layout" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/air_conditioner_switch" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_marginTop="8dp"
+        android:text="Air Conditioner" app:layout_constraintEnd_toEndOf="@+id/smoker_allowed_switch"
+        app:layout_constraintStart_toStartOf="@+id/smoker_allowed_switch"
+        app:layout_constraintTop_toBottomOf="@+id/smoker_allowed_switch" />
+
+    <Button android:id="@+id/select_images_button" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        android:text="Select Car Images"
+        app:layout_constraintEnd_toEndOf="@+id/air_conditioner_switch"
+        app:layout_constraintStart_toStartOf="@+id/air_conditioner_switch"
+        app:layout_constraintTop_toBottomOf="@+id/air_conditioner_switch" />
+
+    <HorizontalScrollView android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="@+id/select_images_button"
+        app:layout_constraintStart_toStartOf="@+id/select_images_button"
+        app:layout_constraintTop_toBottomOf="@+id/select_images_button">
+
+        <LinearLayout android:id="@+id/image_previews_container" android:layout_width="wrap_content"
+            android:layout_height="100dp" android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

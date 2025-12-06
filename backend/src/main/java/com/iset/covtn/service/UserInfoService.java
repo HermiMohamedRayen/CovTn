@@ -151,7 +151,10 @@ public class UserInfoService implements UserDetailsService {
         Optional<UserInfo> userOpt = repository.findById(email);
         if (userOpt.isPresent()) {
             UserInfo user = userOpt.get();
-            if(user.getNumber() == 0){
+            if(user.getNumber() == null || user.getNumber().isEmpty()){
+                return false;
+            }
+            if(user.getProfilePicture() == null || user.getProfilePicture().isEmpty()){
                 return false;
             }
             user.addRole("ROLE_DRIVER");
@@ -180,13 +183,6 @@ public class UserInfoService implements UserDetailsService {
 
     }
 
-
-
-
-
-    // ---------------------------------------------------------
-    // 🔹 MÉTHODES SPÉCIFIQUES : DRIVERS
-    // ---------------------------------------------------------
 
 
 
@@ -313,7 +309,6 @@ public class UserInfoService implements UserDetailsService {
 
     public SseEmitter getMessages(String email) {
         SseEmitter emitter = new SseEmitter(0L);
-        // 3. Store emitter for this user
         userEmitters.computeIfAbsent(email, k -> new ArrayList<>()).add(emitter);
 
         List<String> pending = pendingNotifications.get(email);

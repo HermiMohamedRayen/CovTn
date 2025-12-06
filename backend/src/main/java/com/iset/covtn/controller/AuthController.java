@@ -14,13 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.iset.covtn.exceptions.UserDejaExistException;
 import com.iset.covtn.models.AuthObj;
@@ -108,11 +102,11 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Name cannot be empty.");
             }
-            if (!userInfo.getLastName().trim().isEmpty()) {
+            if (userInfo.getLastName().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Last name cannot be empty.");
             }
-            
+
 
             userService.addUser(userInfo);
             
@@ -203,6 +197,11 @@ public class AuthController {
         return "Utilisateur promu en tant qu'administrateur : " + email;
     }
 
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(Exception e) {
+        System.err.println(e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
     /*
 
     @GetMapping("/restorePass")

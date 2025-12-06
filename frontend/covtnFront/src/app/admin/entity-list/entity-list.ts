@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Entity, EntityService } from '../entity';
 import { CommonModule, TitleCasePipe } from '@angular/common';
@@ -15,9 +15,9 @@ import { RouterModule } from '@angular/router';
   ]
 })
 export class EntityList implements OnInit {
-  entities: any = [];
+  entities = signal<any[]>([]);
   // Définir les colonnes à afficher dans le tableau
-  displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
+  displayedColumns: string[] = ['id', 'prenom', 'nom', 'actions'];
 
   constructor(private entityService: EntityService, private router: Router) { }
 
@@ -28,7 +28,7 @@ export class EntityList implements OnInit {
   loadEntities(): void {
     this.entityService.getAll().subscribe({
       next: (data) => {
-        this.entities = data;
+        this.entities.update(() => data);
       },
       error: (err) => {
         console.error('Erreur lors du chargement des entités', err);

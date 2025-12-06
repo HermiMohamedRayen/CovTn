@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    
+    >
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/house"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_search_ride"
+            android:icon="@drawable/search"
+            android:title="Look for a ride" />
+        <item
+            android:id="@+id/nav_my_participation"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="My Ride Participations" />
+
+        <item
+            android:id="@+id/propose_ride"
+            android:icon="@drawable/outline_add_24"
+            android:title="Propose a ride"
+            />
+        <item
+            android:id="@+id/my_rides"
+            android:title="My Rides"
+            />
+
+
+    </group>
+</menu>
