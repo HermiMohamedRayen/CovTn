@@ -64,6 +64,10 @@ export class CarComponent {
       this.car = this.form.value;
       console.log(this.car);
     if (this.form.valid) {
+      if(this.car.photos.length < 2){
+        alert("provide at least 2 photos")
+        return
+      }
       
       
  
@@ -74,6 +78,7 @@ export class CarComponent {
           this.router.navigate(['/propose-ride']);
         },
         error: (error) => {
+          alert(error.error)
           console.error('Error adding car', error);
         }
       });

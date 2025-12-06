@@ -20,6 +20,12 @@ public class Rating {
     @ManyToOne
     private UserInfo user;
 
+    @JsonIgnoreProperties({
+            "ratings",
+            "ratingsSent",
+            "car",
+            "rideParticipations"
+    })
     @ManyToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserInfo targetUser;

@@ -40,24 +40,20 @@ public class AdminController {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    /**
-     * Liste de tous les utilisateurs (admin uniquement)
-     */
+
     @GetMapping("/users")
     public ResponseEntity<List<UserInfo>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
 
-    /**
-     * Supprimer un utilisateur (admin uniquement)
-     */
     @DeleteMapping("/users/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
         try {
             String result = userService.deleteUser(email);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
+            System.err.println(e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Utilisateur introuvable avec l'email : " + email);
         }
@@ -86,9 +82,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * CRUD pour les conducteurs (Driver)
-     */
 
 
     @GetMapping("/drivers")

@@ -2,6 +2,7 @@ import { Component, effect, OnInit } from '@angular/core';
 import { ApiService } from '../../api-service';
 import { Navigation, NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { App } from '../../app';
 
 
 
@@ -26,13 +27,7 @@ export class ProfileComponent {
     private location: Location
   ) { 
 
-      this.apiService.getProfileImage().then((imageData) => {
-      this.imgUrl = imageData.toString();
-      this.noimg = 1;
-    }).catch((error) => {
-      console.error("Error fetching profile image:", error);
-      this.noimg = 0;
-    });
+      this.loadImage();
 
     
 
@@ -41,17 +36,22 @@ export class ProfileComponent {
     
   updateimg() {
     if(confirm("Do you want to update your profile image?")){
+      
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
       input.onchange = async (event: any) => {
         const file = event.target.files[0];
         if (file) {
+          App.loading.set(true);
           this.apiService.updateProfileImage(file).then(() => {
             console.log("Profile image updated successfully");
             window.location.reload();
+            App.loading.set(false);
+            this.loadImage();
           }).catch((error) => {
             console.error("Error updating profile image:", error);
+            App.loading.set(false);
           });
         }
       }
@@ -107,5 +107,15 @@ export class ProfileComponent {
     }
     const sum = this.user().ratings.reduce((acc:any, rating:any) => acc + rating.rating, 0);
     return Math.round((sum / this.user().ratings.length) * 10) / 10;
+  }
+
+  loadImage() {
+    this.apiService.getProfileImage().then((imageData) => {
+      this.imgUrl = imageData.toString();
+      this.noimg = 1;
+    }).catch((error) => {
+      console.error("Error fetching profile image:", error);
+      this.noimg = 0;
+    });
   }
 }

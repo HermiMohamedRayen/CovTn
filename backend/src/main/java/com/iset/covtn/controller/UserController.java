@@ -51,7 +51,7 @@ public class UserController {
     private RatingRepository ratingRepository;
 
 
-
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @PostMapping("/profile/updatePicture")
     public ResponseEntity<String> updateProfilePicture(@RequestParam("file") MultipartFile file,@RequestHeader("Authorization") String token) {
@@ -92,10 +92,10 @@ public class UserController {
 
 
     @GetMapping("/ride/{id}")
-    public ResponseEntity<?> getRide(@RequestHeader("Authorization") String token, @PathVariable("id") long id) {
-        token = token.substring(7);
-        String email = jwtService.extractUsername(token);
+    public ResponseEntity<?> getRide( @PathVariable("id") long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Ride> ride = rideRepository.findById(id);
+        UserInfo user = userService.findByEmail(userDetails.getUsername());
         if(ride.isPresent()) {
             Ride rideRide = ride.get();
             UserInfo driver = rideRide.getDriver();
@@ -103,8 +103,13 @@ public class UserController {
                 return ResponseEntity.ok(ride.get());
             }
 
+            for(String s : user.getRoles()){
+                if(s.equals("ROLE_ADMIN")){
+                    return ResponseEntity.ok(ride.get());
+                }
+            }
 
-            if(email.equals(driver.getEmail())) {
+            if(userDetails.getUsername().equals(driver.getEmail())) {
                 return ResponseEntity.ok(ride.get());
             }
         }
@@ -176,7 +181,7 @@ public class UserController {
         if (Long.toString(phoneNumber).length() == 8){
             String email = jwtService.extractUsername(token);
             UserInfo user = userService.findByEmail(email);
-            user.setNumber(phoneNumber);
+            user.setNumber(Long.toString(phoneNumber));
             userInfoRepository.save(user);
             return ResponseEntity.ok().build();
         }
@@ -210,6 +215,15 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
         }
+        String dep = "";
+        String arr = "";
+        try{
+            dep = " that depart at "+sdf.format(ride.get().getDepartureTime());
+            arr = " and arrive at "+sdf.format(ride.get().getArrivalTime());
+        }catch (Exception e){
+            System.err.println(e);
+        }
+        userService.sendMessage(ride.get().getDriver().getEmail(),user.getFirstName()+" "+user.getLastName()+" has booked one of your rides"+dep+arr);
         RideParticipation rideParticipation = new RideParticipation();
         rideParticipation.setRide(ride.get());
         rideParticipation.setRider(user);

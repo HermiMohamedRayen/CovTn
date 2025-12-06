@@ -50,17 +50,17 @@
           </thead>
           <tbody>
             @for (ride of filteredRides; track ride.id) {
-              <tr [class.pending]="!ride.approved" [class.approved]="ride.approved">
+              <tr [class.pending]="!ride.approved" [class.approved]="ride.approved" (click)="navto(ride.id)">
                 <td>{{ ride.id }}</td>
                 <td>{{ getDriverInfo(ride) }}</td>
                 <td>
                   @if (ride.departure) {
-                    {{ ride.departure.latitude | number:'1.2-2' }}, {{ ride.departure.longitude | number:'1.2-2' }}
+                    {{ ride.from }}
                   }
                 </td>
                 <td>
                   @if (ride.destination) {
-                    {{ ride.destination.latitude | number:'1.2-2' }}, {{ ride.destination.longitude | number:'1.2-2' }}
+                    {{ ride.to }}
                   }
                 </td>
                 <td>{{ formatDate(ride.departureTime) }}</td>

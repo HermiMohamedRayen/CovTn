@@ -8,7 +8,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ApiService {
 
-  public static baseapiUrl = 'http://192.168.100.101:9092/api';
+  public static baseapiUrl = 'http://localhost:9092/api';
   private apiUrl = ApiService.baseapiUrl;
   constructor(private http: HttpClient) { }
 
@@ -42,6 +42,7 @@ export class ApiService {
 
   }
   signUp(user: { firstName: string, lastName: string, email: string, password: string }): Observable<any> {
+    console.log(user)
     return this.http.post(`${this.apiUrl}/auth/register`, user, { responseType: 'text' as 'json' });
   }
 
@@ -64,7 +65,12 @@ export class ApiService {
   hasRole(role: string): boolean {
   const token = this.loadToken();
   if (!token) return false;
-  const payload = ApiService.user().roles;
+  const userRoles = JSON.parse(atob(token.split('.')[1])).roles;
+  let payload = Array.isArray(userRoles) ? userRoles : [userRoles];
+  if(ApiService.user() && ApiService.user().roles){
+    const rolesFromUser = ApiService.user().roles;
+    payload = Array.isArray(rolesFromUser) ? rolesFromUser : [rolesFromUser];
+  }
   return payload.includes(role);
 }
   refreshToken() {

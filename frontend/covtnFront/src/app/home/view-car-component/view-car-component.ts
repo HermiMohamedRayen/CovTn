@@ -24,6 +24,7 @@ export class ViewCarComponent implements OnInit{
   isSaving = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
+  expandedImage = signal<string | null>(null);
 
   constructor(private router: Router, private apiService: ApiService, private location: Location, private fb: FormBuilder) {
     this.extra = this.router.currentNavigation()?.extras?.state?.['car'];
@@ -92,6 +93,14 @@ export class ViewCarComponent implements OnInit{
       airConditioner: this.car().airConditioner,
       smoker: this.car().smoker
     });
+  }
+
+  expandImage(url: string) {
+    this.expandedImage.set(url);
+  }
+
+  closeImage() {
+    this.expandedImage.set(null);
   }
 
   toggleEditMode(): void {

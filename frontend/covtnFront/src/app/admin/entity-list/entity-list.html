@@ -8,10 +8,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let entity of entities">
+      <tr *ngFor="let entity of entities()">
         <td>{{ entity.email }}</td>
         <td>{{ entity.firstName }}</td>
-        <td>{{ entity.description }}</td>
+        <td>{{ entity.lastName }}</td>
         <td>
           <button class="edit-button" (click)="editEntity(entity.email)">Modifier</button>
           <button class="delete-button" (click)="deleteEntity(entity.email)">Supprimer</button>

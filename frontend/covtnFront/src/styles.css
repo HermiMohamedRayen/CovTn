@@ -15,5 +15,5 @@ body{
     flex: 1;
     background-color: rgba(172, 253, 198, 0.152);
 }
-html, body { height: 100%; }
+html, body { height: 100%;width: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

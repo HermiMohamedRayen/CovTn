@@ -47,6 +47,6 @@ export class EntityService {
 
   // DELETE - Supprimer une entité
   delete(email: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/users/${email}`);
+    return this.http.delete<void>(`${this.apiUrl}/users/${email}`,{headers:{'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.iset.covtn.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_profile"
+            app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_nav_home_to_rideDetails"
+            app:destination="@id/rideDetails" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_search_ride"
+        android:name="com.iset.covtn.ui.searchRide.SearchRideFragment"
+        android:label="Search Ride"
+        tools:layout="@layout/fragment_search_ride" >
+        <action
+            android:id="@+id/action_nav_search_ride_to_nav_search_result"
+            app:destination="@id/nav_search_result" />
+    </fragment>
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.iset.covtn.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/activity_profile">
+        <action
+            android:id="@+id/action_profile_to_nav_driver_details"
+            app:destination="@id/nav_driver_details" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_search_result"
+        android:name="com.iset.covtn.ui.searchRide.SearchResult"
+        android:label="Search Result"
+        tools:layout="@layout/fragment_search_result"
+        >
+        <action
+            android:id="@+id/action_nav_search_result_to_rideDetails"
+            app:destination="@id/rideDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/rideDetails"
+        android:name="com.iset.covtn.ui.home.ride_detail"
+        android:label="Ride Details"
+        tools:layout="@layout/fragment_ride_detail"
+        >
+        <action
+            android:id="@+id/action_rideDetails_to_nav_driver_details"
+            app:destination="@id/nav_driver_details" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_driver_details"
+        android:name="com.iset.covtn.ui.profile.DriverProfileFragment"
+        android:label="Driver Details"
+        tools:layout="@layout/fragment_driver_profile"
+        />
+    <fragment
+        android:id="@+id/nav_my_participation"
+        android:name="com.iset.covtn.ui.MyParticipation.MyParticipationFragment"
+        android:label="My Participation's"
+        tools:layout="@layout/fragment_my_participation"
+        >
+        <action
+            android:id="@+id/action_nav_my_participation_to_rideDetails"
+            app:destination="@id/rideDetails" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_add_car"
+        android:name="com.iset.covtn.ui.Driver.AddCarFragment"
+        android:label="Add Car"
+        tools:layout="@layout/fragment_add_car"
+        />
+
+    <fragment
+        android:id="@+id/propose_ride"
+        android:name="com.iset.covtn.ui.Driver.ProposeRideFragment"
+        android:label="Propose a ride"
+        tools:layout="@layout/fragment_propose_ride"
+        />
+    <fragment
+        android:id="@+id/my_rides"
+        android:name="com.iset.covtn.ui.Driver.MyRidesFragment"
+        android:label="My Rides"
+        tools:layout="@layout/fragment_my_rides"
+        >
+        <action
+            android:id="@+id/action_my_rides_to_rideDetails"
+            app:destination="@id/rideDetails" />
+    </fragment>
+
+
+</navigation>

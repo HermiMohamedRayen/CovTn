@@ -9,8 +9,9 @@ import { Component } from '@angular/core';
 export class Sidebar {
   navLinks = [
     { path: '/admin/entities', label: 'Gérer les Utilisateurs' },
-    { path: '/admin/rides', label: 'Gérer les Rides' },
+    { path: "/admin/rides", label: 'Gérer les Rides' },
     { path: '/admin/statistics', label: 'Statistiques' },
+    { path: '/', label: 'Retourner a la page d\'accueil' }
   ];
 
 }

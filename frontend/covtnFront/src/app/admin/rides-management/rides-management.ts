@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RideService, Ride } from '../../ride-service';
+import { MapService } from '../../map-service';
 
 @Component({
   selector: 'app-rides-management',
@@ -12,12 +13,12 @@ import { RideService, Ride } from '../../ride-service';
 export class RidesManagement implements OnInit {
 
   rides: Ride[] = [];
-  filteredRides: Ride[] = [];
+  filteredRides: any[] = [];
   filter: 'all' | 'approved' | 'pending' = 'all';
   loading = false;
   error: string | null = null;
 
-  constructor(private rideService: RideService) { }
+  constructor(private rideService: RideService,private mapService: MapService) { }
 
   ngOnInit(): void {
     this.loadRides();
@@ -28,7 +29,18 @@ export class RidesManagement implements OnInit {
     this.error = null;
     this.rideService.getAllRides().subscribe({
       next: (rides) => {
-        this.rides = rides;
+        let rs = rides as any[];
+        rs.map(r => {
+          this.mapService.reverseGeocode(r.departure.latitude, r.departure.longitude).subscribe((depAddress: any) => {
+            r.from = depAddress.address.suburb || depAddress.address.county || depAddress.address.city_district;
+            r.fromAddress = depAddress.display_name;
+          });
+          this.mapService.reverseGeocode(r.destination.latitude, r.destination.longitude).subscribe((destAddress: any) => {
+            r.to = destAddress.address.suburb || destAddress.address.county || destAddress.address.city_district;
+            r.toAddress = destAddress.display_name;
+          });
+        });
+        this.rides = rs;
         this.applyFilter();
         this.loading = false;
       },
@@ -114,5 +126,8 @@ export class RidesManagement implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+  navto(rideId: number): void {
+    window.location.href = `/ride-detail/${rideId}`;
   }
 }

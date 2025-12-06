@@ -54,6 +54,7 @@ class DriverController {
         if(user.getCar()==null){
             return ResponseEntity.badRequest().body("add the car first");
         }
+
         ride.setDriver(user);
         ride.setId(null);
         rideRepository.save(ride);
