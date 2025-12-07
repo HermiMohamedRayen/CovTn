@@ -69,7 +69,7 @@ class SearchRideFragment : Fragment(), OnMapReadyCallback {
             startevent()
         }
 
-        binding.setdeptime.setOnClickListener { showTimeDialog(it as TextView,depTime,depTime) }
+        binding.setdeptime.setOnClickListener { showTimeDialog(it as TextView,origin,depTime) }
 
         binding.setdesttime.setOnClickListener { showTimeDialog(it as TextView,depTime,destTime) }
 
@@ -156,7 +156,12 @@ class SearchRideFragment : Fragment(), OnMapReadyCallback {
                 TimePickerDialog(
                     requireContext(),
                     { _, h, min ->
-                        if(h >= prevCalendar.get(Calendar.HOUR_OF_DAY)) {
+                        if(Calendar.getInstance().before(
+                                Calendar.getInstance().apply {
+                                    set(y, m, d, h, min,0)
+                                }
+                            )){
+
                             val final = "%02d/%02d/%04d %02d:%02d".format(d, m + 1, y, h, min)
                             view.text = final
                             calendar.set(y, m, d, h, m,0)
@@ -179,4 +184,5 @@ class SearchRideFragment : Fragment(), OnMapReadyCallback {
 
 
     }
+
 }
