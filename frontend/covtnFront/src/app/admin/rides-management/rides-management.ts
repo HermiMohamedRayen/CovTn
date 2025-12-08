@@ -30,12 +30,12 @@ export class RidesManagement implements OnInit {
     this.rideService.getAllRides().subscribe({
       next: (rides) => {
         let rs = rides as any[];
-        rs.map(r => {
-          this.mapService.reverseGeocode(r.departure.latitude, r.departure.longitude).subscribe((depAddress: any) => {
+        rs.map(async r => {
+          await this.mapService.reverseGeocode(r.departure.latitude, r.departure.longitude).subscribe((depAddress: any) => {
             r.from = depAddress.address.suburb || depAddress.address.county || depAddress.address.city_district;
             r.fromAddress = depAddress.display_name;
           });
-          this.mapService.reverseGeocode(r.destination.latitude, r.destination.longitude).subscribe((destAddress: any) => {
+          await this.mapService.reverseGeocode(r.destination.latitude, r.destination.longitude).subscribe((destAddress: any) => {
             r.to = destAddress.address.suburb || destAddress.address.county || destAddress.address.city_district;
             r.toAddress = destAddress.display_name;
           });

@@ -50,8 +50,8 @@
           </thead>
           <tbody>
             @for (ride of filteredRides; track ride.id) {
-              <tr [class.pending]="!ride.approved" [class.approved]="ride.approved" (click)="navto(ride.id)">
-                <td>{{ ride.id }}</td>
+              <tr [class.pending]="!ride.approved" [class.approved]="ride.approved">
+                <td (click)="navto(ride.id)">{{ ride.id }}</td>
                 <td>{{ getDriverInfo(ride) }}</td>
                 <td>
                   @if (ride.departure) {

@@ -37,7 +37,8 @@ public class UserInfo {
     private Car car;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "rider",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "rider",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE
+    )
     private List<RideParticipation> rideParticipations;
 
      public void addRole(String role) {

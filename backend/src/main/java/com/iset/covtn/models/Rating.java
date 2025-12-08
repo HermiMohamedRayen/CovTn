@@ -17,6 +17,12 @@ public class Rating {
     private String comment;
     private int rating;
 
+    @JsonIgnoreProperties({
+            "ratings",
+            "ratingsSent",
+            "car",
+            "rideParticipations"
+    })
     @ManyToOne
     private UserInfo user;
 
